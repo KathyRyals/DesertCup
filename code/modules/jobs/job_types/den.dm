@@ -278,6 +278,8 @@ Mayor
 	supervisors = "Your Master(s)."
 	description = "You are a beacon of faith in this godless Mojave wasteland, answering only to the higher beings past the plain of the mortal realm. Spread the beliefs of your divine masters through this land by any means necessary."
 	selection_color = "#dcba97"
+	exp_requirements = 0
+	minimal_player_age = 0
 
 	outfit = /datum/outfit/job/den/f13preacher
 
@@ -432,6 +434,8 @@ Mayor
 	supervisors = "the sheriff and the mayor"
 	description = "Much of the wasteland is filled with conflict and strife, as a local settler to Yuma you benefit in that you have a claim to the land and the opportunities that unfold."
 	selection_color = "#dcba97"
+	exp_requirements = 0
+	minimal_player_age = 0
 
 	outfit = /datum/outfit/job/den/f13settler
 

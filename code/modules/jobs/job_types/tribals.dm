@@ -103,6 +103,8 @@ Villager
 	description = "A proud member of the Wayfarer tribe, you do what needs to be done to ensure the survival of yourself and your people while following the laws of the tribe in regards to the historic aversion to pre-war weapons and technology. Additional material, lore and information for your faction: https://desert-rose-fallout-13.fandom.com/wiki/Wayfarer_Tribe_Lore"
 	selection_color = "#008080"
 	exp_type = EXP_TYPE_TRIBAL
+	exp_requirements = 0
+	minimal_player_age = 0
 
 	outfit = /datum/outfit/job/tribal/f13villager
 

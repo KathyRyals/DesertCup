@@ -105,6 +105,8 @@ Detective
 	supervisors = "no one"
 	selection_color = "#dddddd"
 	outfit = /datum/outfit/job/wasteland/f13detective
+	exp_requirements = 0
+	minimal_player_age = 0
 
 	access = list()		//we can expand on this and make alterations as people suggest different loadouts
 	minimal_access = list()
@@ -147,6 +149,8 @@ Raider
 	description = "You are an undesirable figure of some kind- perhaps a corrupt official, or a cannibalistic bartender, or a devious conman, to name a few examples. You have more freedom than anyone else in the wastes, and are not bound by the same moral code as others, but though you may only be interested in self-gain, you still have a responsibility to make your time here interesting, fun, and engaging for others- this means that whatever path you pursue should be more nuanced and flavorful than simple highway robbery or slavery. (Adminhelp if you require help setting up your character for the round.)"
 	supervisors = "Your desire to make things interesting and fun"
 	selection_color = "#ff4747"
+	exp_requirements = 0
+	minimal_player_age = 0
 
 	outfit = /datum/outfit/job/wasteland/f13raider
 
