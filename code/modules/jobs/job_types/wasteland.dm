@@ -372,6 +372,7 @@ Raider
 	description = "You travelled far to arrive at the ruined town of Pahrump, a bleak paradise far from the troubles of the Mojave Conflict - protected by Red Rock Canyon to the east, free of the many factions vying for control over Nevada. Here in Pahrump, your story and fate is your own."
 	supervisors = "no one"
 	selection_color = "#dddddd"
+	exp_requirements = 0
 
 	outfit = /datum/outfit/job/wasteland/f13wastelander
 
