@@ -373,6 +373,7 @@ Raider
 	supervisors = "no one"
 	selection_color = "#dddddd"
 	exp_requirements = 0
+	minimal_player_age = 0
 
 	outfit = /datum/outfit/job/wasteland/f13wastelander
 
