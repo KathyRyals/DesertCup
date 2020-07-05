@@ -207,3 +207,11 @@
 	volume = 10
 	amount_per_transfer_from_this = 10
 	list_reagents = list("psycho" = 10)
+	
+/obj/item/reagent_containers/hypospray/medipen/medx
+	name = "med-x autoinjector"
+	desc = "A one-use injector containing a dose of med-x, a powerful and addictive painkiller similar to an advanced morphine."
+	icon_state = "medxpen"
+	volume = 5
+	amount_per_transfer_from_this = 5
+	list_reagents = list("medx" = 5)
