@@ -544,7 +544,7 @@ Recruit Legionary
 	spawn_positions = 3
 	description = "You have recently come of age or been inducted into Caesar's Legion. You have absolutely no training, and are expected to follow every whim of the Decanii and your Centurion."
 	supervisors = "the Decani and Centurion"
-	exp_requirements = 300
+	exp_requirements = 120
 	exp_type = EXP_TYPE_CREW
 
 	outfit = /datum/outfit/job/CaesarsLegion/Legionnaire/f13recleg
@@ -700,7 +700,7 @@ Camp Follower
 	spawn_positions = 4
 	description = "You answer to any member of the Legion, but take orders directly from the Auxilia around the camp. Working as a Camp Follower for the Centuria, you bear the great honor of supporting Caesar's Army in its conquest of the Mojave in whatever capacity required from those whom you serve. You perform any tasks required of you, for you know how to serve the Legion well."
 	supervisors = "the entire legion"
-	exp_requirements = 300
+	exp_requirements = 60
 
 	outfit = /datum/outfit/job/CaesarsLegion/f13campfollower
 
@@ -767,7 +767,8 @@ Slave
 	spawn_positions = 4
 	description = "You answer to any member of the Legion, but take orders directly from the Auxilia around the camp. You are to the point where you have been broken in as a slave and most slaves will no longer consider escaping as an option."
 	supervisors = "the entire legion, but mostly the Slavemaster"
-	exp_requirements = 300
+	exp_requirements = 30
+	exp_type = EXP_TYPE_CREW
 
 	outfit = /datum/outfit/job/CaesarsLegion/slave
 

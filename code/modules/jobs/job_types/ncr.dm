@@ -466,7 +466,7 @@ Trooper
 	description = "You answer to everyone above you in the chain of command, taking orders from your Sergeant directly and obeying all commands given by officers such as the Lieutenant and Captain."
 	supervisors = "Corporals and above"
 	selection_color = "#fff5cc"
-	exp_requirements = 300
+	exp_requirements = 120
 
 	outfit = /datum/outfit/job/ncr/f13trooper
 
@@ -517,7 +517,7 @@ Recruit
 	description = "You are a noncombatant member of the NCR assigned the vital duty of helping them with cooking, farming, mining, and other menial tasks. While you have been to basic training, it was rushed and hardly prepared you for the horrors of war. Your sidearm is to be used in your own defense, only."
 	supervisors = "everyone in the NCR"
 	selection_color = "#fff5cc"
-	exp_requirements = 300
+	exp_requirements = 60
 	exp_type = EXP_TYPE_CREW
 
 	outfit = /datum/outfit/job/ncr/f13recruit
@@ -582,7 +582,7 @@ Recruit
 	description = "As an NCR Citizen, you may believe that the potential for fortune out west has dried up and that the frontier holds abundant opportunities for you to encroach and take advantage of. Surrounded by the relative safety of the Republic, you are responsible for being a part of the cities community and maintaining the facilities within it in any capacity which will aid the greater good. You may correspond with the Administrator or other NCR leadership to help them achieve goals, or pursue your own individual goals as an independent agent of the NCR.."
 	supervisors = "NCR Administrator"
 	selection_color = "#fff5cc"
-	exp_requirements = 300
+	exp_requirements = 60
 	exp_type = EXP_TYPE_CREW
 	outfit = /datum/outfit/job/ncr/f13ncrcitizen
 	loadout_options = list(
