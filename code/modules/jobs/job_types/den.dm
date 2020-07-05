@@ -193,7 +193,7 @@ Mayor
 	supervisors = "the sheriff and the mayor"
 	description = "Prospecting is a complicated business, some call it scrounging or looting but there is more to it then sifting through rubble - few can boast the skills you posess in mining and delving through the ruins of pre-war America. Not many survive this line of business and the pay has always been uncertain, but perhaps today you'll find strike gold."
 	selection_color = "#dcba97"
-	exp_requirements = 180
+	exp_requirements = 120
 	exp_type = EXP_TYPE_DEN
 
 	outfit = /datum/outfit/job/den/f13prospector
@@ -237,7 +237,7 @@ Mayor
 	supervisors = "the sheriff and the mayor"
 	description = "Handy with a scalpel and a scanner, your expertise in the practice of medicine makes you an indespesnbile asset to the town. How you play your trade and whether it be for profit or the fortune of others rests entirely upon your shoulders."
 	selection_color = "#dcba97"
-	exp_requirements = 540
+	exp_requirements = 300
 	exp_type = EXP_TYPE_DEN
 
 	outfit = /datum/outfit/job/den/f13dendoc
