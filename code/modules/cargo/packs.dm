@@ -1140,7 +1140,7 @@
 					/obj/item/vending_refill/medical,
 					/obj/item/vending_refill/medical)
 	crate_name = "medical vending crate"
-/datum/supply_pack/medical/firstaidbruises
+/datum/supply_pack/medical/posibrain
 	name = "Posibrain Crate"
 	desc = "Contains a posibrain, used in robotic contruction."
 	cost = 2500
