@@ -440,7 +440,7 @@ Senior Scribe
 	enforces = "The Brotherhood of Steel Expects: Obeying the Chain That - Binds your direct superior. Collection and safeguarding of technology from the wasteland. Experimentation and research."
 	supervisors = "the Head Scribe"
 	selection_color = "#95a5a6"
-	exp_requirements = 600
+	exp_requirements = 180
 	outfit = /datum/outfit/job/bos/f13seniorscribe
 
 	access = list(ACCESS_ROBOTICS, ACCESS_BOS, ACCESS_ENGINE_EQUIP, ACCESS_ENGINE, ACCESS_HYDROPONICS, ACCESS_KITCHEN, ACCESS_BAR, ACCESS_SEC_DOORS)
@@ -685,7 +685,7 @@ Initiate
 	enforces = "The Brotherhood of Steel Expects: Obeying the Chain That - Binds your direct superior. Collection and safeguarding of technology from the wasteland. Experimentation and research."
 	supervisors = "the scribes, knights, or Paladins"
 	selection_color = "#95a5a6"
-	exp_requirements = 1800
+	exp_requirements = 300
 	exp_type = EXP_TYPE_CREW
 
 	loadout_options = list(
