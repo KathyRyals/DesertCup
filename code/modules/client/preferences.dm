@@ -54,7 +54,10 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	var/preferred_map = null
 	var/pda_style = MONO
 	var/pda_color = "#808000"
-
+	var/list/randomise = list(RANDOM_UNDERWEAR = TRUE, RANDOM_UNDERWEAR_COLOR = TRUE, RANDOM_UNDERSHIRT = TRUE, RANDOM_SOCKS = TRUE, RANDOM_BACKPACK = TRUE, RANDOM_JUMPSUIT_STYLE = TRUE, RANDOM_HAIRSTYLE = TRUE, RANDOM_HAIR_COLOR = TRUE, RANDOM_FACIAL_HAIRSTYLE = TRUE, RANDOM_FACIAL_HAIR_COLOR = TRUE, RANDOM_SKIN_TONE = TRUE, RANDOM_EYE_COLOR = TRUE)
+	
+	var/list/job_preferences = list()
+	
 	var/uses_glasses_colour = 0
 
 	//character preferences
@@ -250,8 +253,6 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 				dat += "<center><b>Current Quirks:</b> [all_quirks.len ? all_quirks.Join(", ") : "None"]</center>"
 			dat += "<h2>Identity</h2>"
 			dat += "<table width='100%'><tr><td width='75%' valign='top'>"
-			if(jobban_isbanned(user, "appearance"))
-				dat += "<b>You are banned from using custom names and appearances. You can continue to adjust your characters, but you will be randomised once you join the game.</b><br>"
 			dat += "<a href='?_src_=prefs;preference=name;task=random'>Random Name</A> "
 			dat += "<a href='?_src_=prefs;preference=name'>Always Random Name: [be_random_name ? "Yes" : "No"]</a><BR>"
 
@@ -601,25 +602,17 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 
 			dat += "<h2>Special Role Settings</h2>"
 
-			if(jobban_isbanned(user, ROLE_SYNDICATE))
-				dat += "<font color=red><b>You are banned from antagonist roles.</b></font>"
-				src.be_special = list()
-
-
 			for (var/i in GLOB.special_roles)
-				if(jobban_isbanned(user, i))
-					dat += "<b>Be [capitalize(i)]:</b> <a href='?_src_=prefs;jobbancheck=[i]'>BANNED</a><br>"
-				else
-					var/days_remaining = null
-					if(ispath(GLOB.special_roles[i]) && CONFIG_GET(flag/use_age_restriction_for_jobs)) //If it's a game mode antag, check if the player meets the minimum age
-						var/mode_path = GLOB.special_roles[i]
-						var/datum/game_mode/temp_mode = new mode_path
-						days_remaining = temp_mode.get_remaining_days(user.client)
+				var/days_remaining = null
+				if(ispath(GLOB.special_roles[i]) && CONFIG_GET(flag/use_age_restriction_for_jobs)) //If it's a game mode antag, check if the player meets the minimum age
+					var/mode_path = GLOB.special_roles[i]
+					var/datum/game_mode/temp_mode = new mode_path
+					days_remaining = temp_mode.get_remaining_days(user.client)
 
-					if(days_remaining)
-						dat += "<b>Be [capitalize(i)]:</b> <font color=red> \[IN [days_remaining] DAYS]</font><br>"
-					else
-						dat += "<b>Be [capitalize(i)]:</b> <a href='?_src_=prefs;preference=be_special;be_special_type=[i]'>[(i in be_special) ? "Enabled" : "Disabled"]</a><br>"
+				if(days_remaining)
+					dat += "<b>Be [capitalize(i)]:</b> <font color=red> \[IN [days_remaining] DAYS]</font><br>"
+				else
+					dat += "<b>Be [capitalize(i)]:</b> <a href='?_src_=prefs;preference=be_special;be_special_type=[i]'>[(i in be_special) ? "Enabled" : "Disabled"]</a><br>"
 			dat += "<br>"
 			dat += "<b>Midround Antagonist:</b> <a href='?_src_=prefs;preference=allow_midround_antag'>[(toggles & MIDROUND_ANTAG) ? "Enabled" : "Disabled"]</a><br>"
 
@@ -728,9 +721,6 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 			var/rank = job.title
 			lastJob = job
 
-			if(jobban_isbanned(user, rank))
-				HTML += "<font color=red>[rank]</font></td><td><a href='?_src_=prefs;jobbancheck=[rank]'> BANNED</a></td></tr>"
-				continue
 			var/required_playtime_remaining = job.required_playtime_remaining(user.client)
 			if(required_playtime_remaining)
 				HTML += "<font color=red>[rank]</font></td><td><font color=red> \[ [get_exp_format(required_playtime_remaining)] as [job.get_exp_req_type()] \] </font></td></tr>"
@@ -739,7 +729,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 				var/available_in_days = job.available_in_days(user.client)
 				HTML += "<font color=red>[rank]</font></td><td><font color=red> \[IN [(available_in_days)] DAYS\]</font></td></tr>"
 				continue
-			if((job_civilian_low & overflow.flag) && (rank != SSjob.overflow_role) && !jobban_isbanned(user, SSjob.overflow_role))
+			if((job_civilian_low & overflow.flag) && (rank != SSjob.overflow_role))
 				HTML += "<font color=orange>[rank]</font></td><td></td></tr>"
 				continue
 			if(job.whitelist_locked(user.client,job.title))
@@ -1271,7 +1261,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	if(href_list["jobbancheck"])
 		var/job = sanitizeSQL(href_list["jobbancheck"])
 		var/sql_ckey = sanitizeSQL(user.ckey)
-		var/datum/DBQuery/query_get_jobban = SSdbcore.NewQuery("SELECT reason, bantime, duration, expiration_time, a_ckey FROM [format_table_name("ban")] WHERE ckey = '[sql_ckey]' AND (bantype = 'JOB_PERMABAN'  OR (bantype = 'JOB_TEMPBAN' AND expiration_time > Now())) AND isnull(unbanned) AND job = '[job]'")
+		var/datum/db_query/query_get_jobban = SSdbcore.NewQuery("SELECT reason, bantime, duration, expiration_time, a_ckey FROM [format_table_name("ban")] WHERE ckey = '[sql_ckey]' AND (bantype = 'JOB_PERMABAN'  OR (bantype = 'JOB_TEMPBAN' AND expiration_time > Now())) AND isnull(unbanned) AND job = '[job]'")
 		if(!query_get_jobban.warn_execute())
 			qdel(query_get_jobban)
 			return
@@ -1301,10 +1291,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 			if("random")
 				switch(joblessrole)
 					if(RETURNTOLOBBY)
-						if(jobban_isbanned(user, SSjob.overflow_role))
-							joblessrole = RETURNTOLOBBY
-						else
-							joblessrole = BEOVERFLOW
+						joblessrole = BEOVERFLOW
 					if(BEOVERFLOW)
 						joblessrole = RETURNTOLOBBY
 					if(BERANDOMJOB)
@@ -1746,6 +1733,8 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 					windowflashing = !windowflashing
 				if("hear_adminhelps")
 					toggles ^= SOUND_ADMINHELP
+				if("hear_prayers")
+					user.client.toggle_prayer_sound()
 				if("announce_login")
 					toggles ^= ANNOUNCE_LOGIN
 				if("combohud_lighting")

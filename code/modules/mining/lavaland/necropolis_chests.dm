@@ -575,8 +575,7 @@
 				to_chat(M, "<span class='notice'><i>You feel nothing but a terrible aftertaste.</i></span>")
 			return ..()
 
-		to_chat(M, "<span class='userdanger'>A terrible pain travels down your back as wings burst out!</span>")
-		M.set_species(/datum/species/angel)
+		to_chat(M, "<span class='userdanger'>A terrible pain travels across your body as you swallow the poison! (Please ahelp this so you can get a proper reward.)</span>")
 		playsound(M.loc, 'sound/items/poster_ripped.ogg', 50, 1, -1)
 		M.adjustBruteLoss(20)
 		M.emote("scream")

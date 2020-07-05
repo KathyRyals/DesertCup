@@ -34,3 +34,11 @@
 #define MASKINTERNALS				    (1<<3)		// mask allows internals
 #define NOSLIP                  (1<<4)   //prevents from slipping on wet floors, in space etc
 #define THICKMATERIAL				(1<<5)	//prevents syringes, parapens and hypos if the external suit or helmet (if targeting head) has this flag. Example: space suits, biosuit, bombsuits, thick suits that cover your body.
+
+#define ORGAN_SYNTHETIC			(1<<0)	//Synthetic organs, or cybernetic organs. Reacts to EMPs and don't deteriorate or heal
+#define ORGAN_FROZEN			(1<<1)	//Frozen organs, don't deteriorate
+#define ORGAN_FAILING			(1<<2)	//Failing organs perform damaging effects until replaced or fixed
+#define ORGAN_EXTERNAL			(1<<3)	//Was this organ implanted/inserted/etc, if true will not be removed during species change.
+#define ORGAN_VITAL				(1<<4)	//Currently only the brain
+#define ORGAN_EDIBLE			(1<<5)	//is a snack? :D
+#define ORGAN_SYNTHETIC_EMP		(1<<6)	//Synthetic organ affected by an EMP. Deteriorates over time.

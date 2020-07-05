@@ -244,7 +244,7 @@
 	if(ispath(item_to_add.dog_fashion, /datum/dog_fashion/head))
 		valid = TRUE
 
-	//Various hats and items (worn on his head) change Ian's behaviour. His attributes are reset when a hat is removed.
+	//Various hats and items (worn on his head) change ian's behaviour. His attributes are reset when a hat is removed.
 
 	if(valid)
 		if(health <= 0)
@@ -289,9 +289,9 @@
 		DF.apply(src)
 
 //IAN! SQUEEEEEEEEE~
-/mob/living/simple_animal/pet/dog/corgi/Ian
-	name = "Ian"
-	real_name = "Ian"	//Intended to hold the name without altering it.
+/mob/living/simple_animal/pet/dog/corgi/ian
+	name = "ian"
+	real_name = "ian"	//Intended to hold the name without altering it.
 	gender = MALE
 	desc = "It's the HoP's beloved corgi."
 	var/turns_since_scan = 0
@@ -306,7 +306,7 @@
 	var/memory_saved = FALSE
 	var/saved_head //path
 
-/mob/living/simple_animal/pet/dog/corgi/Ian/Initialize()
+/mob/living/simple_animal/pet/dog/corgi/ian/Initialize()
 	. = ..()
 	//parent call must happen first to ensure IAN
 	//is not in nullspace when child puppies spawn
@@ -315,8 +315,8 @@
 		var/turf/target = get_turf(loc)
 		if(target)
 			var/mob/living/simple_animal/pet/dog/corgi/puppy/P = new /mob/living/simple_animal/pet/dog/corgi/puppy(target)
-			P.name = "Ian"
-			P.real_name = "Ian"
+			P.name = "ian"
+			P.real_name = "ian"
 			P.gender = MALE
 			P.desc = "It's the HoP's beloved corgi puppy."
 			Write_Memory(FALSE)
@@ -325,29 +325,29 @@
 		icon_state = "old_corgi"
 		icon_living = "old_corgi"
 		icon_dead = "old_corgi_dead"
-		desc = "At a ripe old age of [record_age] Ian's not as spry as he used to be, but he'll always be the HoP's beloved corgi." //RIP
+		desc = "At a ripe old age of [record_age] ian's not as spry as he used to be, but he'll always be the HoP's beloved corgi." //RIP
 		turns_per_move = 20
 
-/mob/living/simple_animal/pet/dog/corgi/Ian/Life()
+/mob/living/simple_animal/pet/dog/corgi/ian/Life()
 	if(!stat && SSticker.current_state == GAME_STATE_FINISHED && !memory_saved)
 		Write_Memory(FALSE)
 		memory_saved = TRUE
 	..()
 
-/mob/living/simple_animal/pet/dog/corgi/Ian/death()
+/mob/living/simple_animal/pet/dog/corgi/ian/death()
 	if(!memory_saved)
 		Write_Memory(TRUE)
 	..()
 
-/mob/living/simple_animal/pet/dog/corgi/Ian/proc/Read_Memory()
-	if(fexists("data/npc_saves/Ian.sav")) //legacy compatability to convert old format to new
-		var/savefile/S = new /savefile("data/npc_saves/Ian.sav")
+/mob/living/simple_animal/pet/dog/corgi/ian/proc/Read_Memory()
+	if(fexists("data/npc_saves/ian.sav")) //legacy compatability to convert old format to new
+		var/savefile/S = new /savefile("data/npc_saves/ian.sav")
 		S["age"] 		>> age
 		S["record_age"]	>> record_age
 		S["saved_head"] >> saved_head
-		fdel("data/npc_saves/Ian.sav")
+		fdel("data/npc_saves/ian.sav")
 	else
-		var/json_file = file("data/npc_saves/Ian.json")
+		var/json_file = file("data/npc_saves/ian.json")
 		if(!fexists(json_file))
 			return
 		var/list/json = json_decode(file2text(json_file))
@@ -361,8 +361,8 @@
 	if(saved_head)
 		place_on_head(new saved_head)
 
-/mob/living/simple_animal/pet/dog/corgi/Ian/proc/Write_Memory(dead)
-	var/json_file = file("data/npc_saves/Ian.json")
+/mob/living/simple_animal/pet/dog/corgi/ian/proc/Write_Memory(dead)
+	var/json_file = file("data/npc_saves/ian.json")
 	var/list/file_data = list()
 	if(!dead)
 		file_data["age"] = age + 1
@@ -381,7 +381,7 @@
 	fdel(json_file)
 	WRITE_FILE(json_file, json_encode(file_data))
 
-/mob/living/simple_animal/pet/dog/corgi/Ian/Life()
+/mob/living/simple_animal/pet/dog/corgi/ian/Life()
 	..()
 
 	//Feeding, chasing food, FOOOOODDDD
@@ -435,14 +435,14 @@
 					setDir(i)
 					sleep(1)
 
-/mob/living/simple_animal/pet/dog/corgi/Ian/narsie_act()
+/mob/living/simple_animal/pet/dog/corgi/ian/narsie_act()
 	playsound(src, 'sound/magic/demon_dies.ogg', 75, TRUE)
 	var/mob/living/simple_animal/pet/dog/corgi/narsie/N = new(loc)
 	N.setDir(dir)
 	gib()
 
 /mob/living/simple_animal/pet/dog/corgi/narsie
-	name = "Nars-Ian"
+	name = "Nars-ian"
 	desc = "Ia! Ia!"
 	icon_state = "narsian"
 	icon_living = "narsian"

@@ -39,14 +39,6 @@
 		to_chat(usr, "<span class='danger'>Speech is currently admin-disabled.</span>")
 		return
 
-	var/jb = jobban_isbanned(src, "OOC")
-	if(QDELETED(src))
-		return
-
-	if(jb)
-		to_chat(src, "<span class='danger'>You have been banned from deadchat.</span>")
-		return
-
 	if (src.client)
 		if(src.client.prefs.muted & MUTE_DEADCHAT)
 			to_chat(src, "<span class='danger'>You cannot talk in deadchat (muted).</span>")

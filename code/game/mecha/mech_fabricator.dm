@@ -33,13 +33,11 @@
 								"Misc"
 								)
 
-/obj/machinery/mecha_part_fabricator/Initialize()
-    var/datum/component/material_container/materials = AddComponent(/datum/component/material_container,
-     list(MAT_METAL, MAT_GLASS, MAT_SILVER, MAT_GOLD, MAT_DIAMOND, MAT_PLASMA, MAT_URANIUM, MAT_BANANIUM, MAT_TITANIUM, MAT_BLUESPACE), 0,
-        TRUE, list(/obj/item/stack), CALLBACK(src, .proc/is_insertion_ready), CALLBACK(src, .proc/AfterMaterialInsert))
-    materials.precise_insertion = TRUE
-    stored_research = new
-    return ..()
+/obj/machinery/mecha_part_fabricator/Initialize(mapload)
+	stored_research = new
+	rmat = AddComponent(/datum/component/remote_materials, "mechfab", mapload && link_on_init)
+	RefreshParts() //Recalculating local material sizes if the fab isn't linked
+	return ..()
 
 /obj/machinery/mecha_part_fabricator/RefreshParts()
 	var/T = 0

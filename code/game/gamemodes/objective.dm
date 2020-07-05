@@ -1,6 +1,9 @@
+GLOBAL_LIST(admin_objective_list) //Prefilled admin assignable objective list
+
 /datum/objective
 	var/datum/mind/owner				//The primary owner of the objective. !!SOMEWHAT DEPRECATED!! Prefer using 'team' for new code.
 	var/datum/team/team       //An alternative to 'owner': a team. Use this when writing new code.
+	var/name = "generic objective"      //Name for admin prompts
 	var/explanation_text = "Nothing"	//What that person is supposed to do.
 	var/team_explanation_text			//For when there are multiple owners.
 	var/datum/mind/target = null		//If they are focused on a particular person.
@@ -39,6 +42,34 @@
 			if(istype(O, type) && O.get_target() == possible_target)
 				return FALSE
 	return TRUE
+	
+/datum/objective/proc/admin_edit(mob/admin)
+	return
+	
+//Shared by few objective types
+/datum/objective/proc/admin_simple_target_pick(mob/admin)
+	var/list/possible_targets = list("Free objective","Random")
+	var/def_value
+	for(var/datum/mind/possible_target in SSticker.minds)
+		if ((possible_target != src) && ishuman(possible_target.current))
+			possible_targets += possible_target.current
+
+
+	if(target && target.current)
+		def_value = target.current
+
+	var/mob/new_target = input(admin,"Select target:", "Objective target", def_value) as null|anything in sortNames(possible_targets)
+	if (!new_target)
+		return
+
+	if (new_target == "Free objective")
+		target = null
+	else if (new_target == "Random")
+		find_target()
+	else
+		target = new_target.mind
+
+	update_explanation_text()
 
 /datum/objective/proc/get_target()
 	return target
@@ -236,6 +267,42 @@
 
 /datum/objective/protect/nonhuman
 	human_check = FALSE
+
+/datum/objective/jailbreak
+	name = "jailbreak"
+	martyr_compatible = TRUE //why not?
+	var/target_role_type
+
+/datum/objective/jailbreak/find_target_by_role(role, role_type, invert=FALSE)
+	if(!invert)
+		target_role_type = role_type
+	return ..()
+
+/datum/objective/jailbreak/check_completion()
+	return completed || (considered_escaped(target))
+
+/datum/objective/jailbreak/update_explanation_text()
+	..()
+	if(target?.current)
+		explanation_text = "Ensure that [target.name], the [!target_role_type ? target.assigned_role : target.special_role] escapes alive and out of custody."
+	else
+		explanation_text = "Free Objective"
+
+/datum/objective/jailbreak/admin_edit(mob/admin)
+	admin_simple_target_pick(admin)
+
+/datum/objective/jailbreak/detain
+	name = "detain"
+
+/datum/objective/jailbreak/detain/check_completion()
+	return completed || (!considered_escaped(target) && (considered_alive(target) && target.current.onCentCom()))
+
+/datum/objective/jailbreak/detain/update_explanation_text()
+	..()
+	if(target && target.current)
+		explanation_text = "Ensure that [target.name], the [!target_role_type ? target.assigned_role : target.special_role] is delivered to nanotrasen alive and in custody."
+	else
+		explanation_text = "Free Objective"
 
 /datum/objective/hijack
 	explanation_text = "Hijack the shuttle to ensure no loyalist Vault-Tec crew escape alive and out of custody."
@@ -693,6 +760,14 @@ GLOBAL_LIST_EMPTY(possible_items_special)
 				stolen_count++
 	return stolen_count >= 5
 
+//Created by admin tools
+/datum/objective/custom
+	name = "custom"
+
+/datum/objective/custom/admin_edit(mob/admin)
+	var/expl = stripped_input(admin, "Custom objective:", "Objective", explanation_text)
+	if(expl)
+		explanation_text = expl
 
 ////////////////////////////////
 // Changeling team objectives //
@@ -864,5 +939,32 @@ GLOBAL_LIST_EMPTY(possible_items_special)
 	explanation_text = "Have X or more heads of staff escape on the shuttle disguised as heads, while the real heads are dead"
 	command_staff_only = TRUE
 
+//Ideally this would be all of them but laziness and unusual subtypes
+/proc/generate_admin_objective_list()
+	GLOB.admin_objective_list = list()
+
+	var/list/allowed_types = sortList(list(
+		/datum/objective/assassinate,
+		/datum/objective/maroon,
+		/datum/objective/debrain,
+		/datum/objective/protect,
+		/datum/objective/jailbreak,
+		/datum/objective/jailbreak/detain,
+		/datum/objective/destroy,
+		/datum/objective/hijack,
+		/datum/objective/escape,
+		/datum/objective/survive,
+		/datum/objective/martyr,
+		/datum/objective/steal,
+		/datum/objective/download,
+		/datum/objective/nuclear,
+		/datum/objective/capture,
+		/datum/objective/absorb,
+		/datum/objective/custom
+	),/proc/cmp_typepaths_asc)
+
+	for(var/T in allowed_types)
+		var/datum/objective/X = T
+		GLOB.admin_objective_list[initial(X.name)] = T
 
 

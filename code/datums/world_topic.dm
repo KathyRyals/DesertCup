@@ -112,9 +112,6 @@
 	keyword = "adminmsg"
 	require_comms_key = TRUE
 
-/datum/world_topic/adminmsg/Run(list/input)
-	return IrcPm(input[keyword], input["msg"], input["sender"])
-
 /datum/world_topic/namecheck
 	keyword = "namecheck"
 	require_comms_key = TRUE
@@ -130,9 +127,6 @@
 /datum/world_topic/adminwho
 	keyword = "adminwho"
 	require_comms_key = TRUE
-
-/datum/world_topic/adminwho/Run(list/input)
-	return ircadminwho()
 
 /datum/world_topic/status
 	keyword = "status"

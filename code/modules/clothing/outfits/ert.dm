@@ -160,10 +160,10 @@
 		/obj/item/construction/rcd/combat=1)
 
 
-/datum/outfit/centcom_official
+/datum/outfit/centcom/centcom_official
 	name = "CentCom Official"
 
-	uniform = /obj/item/clothing/under/rank/centcom_officer
+	uniform = /obj/item/clothing/under/rank/centcom/officer
 	shoes = /obj/item/clothing/shoes/sneakers/black
 	gloves = /obj/item/clothing/gloves/color/black
 	ears = /obj/item/radio/headset/headset_cent
@@ -173,9 +173,10 @@
 	back = /obj/item/storage/backpack/satchel
 	r_pocket = /obj/item/pda/heads
 	l_hand = /obj/item/clipboard
-	id = /obj/item/card/id
+	id = /obj/item/card/id/centcom
+	backpack_contents = list(/obj/item/stamp/centcom=1)
 
-/datum/outfit/centcom_official/post_equip(mob/living/carbon/human/H, visualsOnly = FALSE)
+/datum/outfit/centcom/centcom_official/post_equip(mob/living/carbon/human/H, visualsOnly = FALSE)
 	if(visualsOnly)
 		return
 
@@ -185,12 +186,12 @@
 	pda.update_label()
 
 	var/obj/item/card/id/W = H.wear_id
-	W.icon_state = "centcom"
 	W.access = get_centcom_access("CentCom Official")
 	W.access += ACCESS_WEAPONS
 	W.assignment = "CentCom Official"
 	W.registered_name = H.real_name
 	W.update_label()
+	..()
 
 /datum/outfit/ert/commander/inquisitor
 	name = "Inquisition Commander"

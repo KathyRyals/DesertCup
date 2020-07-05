@@ -149,6 +149,8 @@ Mayor
 	supervisors = "the sheriff and the mayor"
 	description = "A local settler of Yuma, you know a thing or two about cultivation and husbandry, making you a vital backbone of the town in growing medicines, crops and raising livestock in the service of the townsfolk."
 	selection_color = "#dcba97"
+	exp_requirements = 0
+	minimal_player_age = 0
 
 
 	outfit = /datum/outfit/job/den/f13farmer

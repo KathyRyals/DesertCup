@@ -146,10 +146,11 @@
 	colour = "red"
 
 /obj/item/organ/heart/cybernetic
-	name = "cybernetic heart"
-	desc = "An electronic device designed to mimic the functions of an organic human heart. Offers no benefit over an organic heart other than being easy to make."
+	name = "basic cybernetic heart"
+	desc = "A basic electronic device designed to mimic the functions of an organic human heart."
 	icon_state = "heart-c"
-	synthetic = TRUE
+	organ_flags = ORGAN_SYNTHETIC
+	maxHealth = STANDARD_ORGAN_THRESHOLD*0.75 //This also hits defib timer, so a bit higher than its less important counterparts
 
 /obj/item/organ/heart/cybernetic/emp_act()
 	. = ..()
@@ -160,7 +161,7 @@
 /obj/item/organ/heart/freedom
 	name = "heart of freedom"
 	desc = "This heart pumps with the passion to give... something freedom."
-	synthetic = TRUE //the power of freedom prevents heart attacks
+	organ_flags = ORGAN_SYNTHETIC //the power of freedom prevents heart attacks
 	var/min_next_adrenaline = 0
 
 /obj/item/organ/heart/freedom/on_life()

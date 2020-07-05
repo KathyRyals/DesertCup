@@ -1,114 +1,221 @@
+/**
+  * # Outfit datums
+  *
+  * This is a clean system of applying outfits to mobs, if you need to equip someone in a uniform
+  * this is the way to do it cleanly and properly.
+  *
+  * You can also specify an outfit datum on a job to have it auto equipped to the mob on join
+  *
+  * /mob/living/carbon/human/proc/equipOutfit(outfit) is the mob level proc to equip an outfit
+  * and you pass it the relevant datum outfit
+  *
+  * outfits can also be saved as json blobs downloadable by a client and then can be uploaded
+  * by that user to recreate the outfit, this is used by admins to allow for custom event outfits
+  * that can be restored at a later date
+  */
 /datum/outfit
+	///Name of the outfit (shows up in the equip admin verb)
 	var/name = "Naked"
 
+	/// Type path of item to go in uniform slot
 	var/uniform = null
+
+	/// Type path of item to go in suit slot
 	var/suit = null
-	var/toggle_helmet = TRUE
+
+	/// Type path of item to go in back slot
 	var/back = null
+
+	/// Type path of item to go in belt slot
 	var/belt = null
+
+	/// Type path of item to go in gloves slot
 	var/gloves = null
+
+	/// Type path of item to go in shoes slot
 	var/shoes = null
+
+	/// Type path of item to go in head slot
 	var/head = null
+
+	/// Type path of item to go in mask slot
 	var/mask = null
+
+	/// Type path of item to go in neck slot
 	var/neck = null
+
+	/// Type path of item to go in ears slot
 	var/ears = null
+
+	/// Type path of item to go in the glasses slot
 	var/glasses = null
+
+	/// Type path of item to go in the idcard slot
 	var/id = null
+
+	/// Type path of item for left pocket slot
 	var/l_pocket = null
+
+	/// Type path of item for right pocket slot
 	var/r_pocket = null
+
+	/**
+	  * Type path of item to go in suit storage slot
+	  *
+	  * (make sure it's valid for that suit)
+	  */
 	var/suit_store = null
+
+	///Type path of item to go in the right hand
 	var/r_hand = null
+
+	//Type path of item to go in left hand
 	var/l_hand = null
-	var/internals_slot = null //ID of slot containing a gas tank
-	var/list/backpack_contents = list() // In the list(path=count,otherpath=count) format
-	var/list/implants = list()
-	var/accessory = null
 
-	var/can_be_admin_equipped = TRUE // Set to FALSE if your outfit requires runtime parameters
-	var/list/chameleon_extras //extra types for chameleon outfit changes, mostly guns
+	/// Should the toggle helmet proc be called on the helmet during equip
+	var/toggle_helmet = TRUE
 
+	///ID of the slot containing a gas tank
+	var/internals_slot = null
+	
 	var/list/all_types = list()
 	var/list/all_possible_types = list()
 	var/contains_randomisation = FALSE //Used to redo asset loading with randomised outfits
 
-//Simple randomisation support. If any of the piece types is a list, a random item is picked from that list
-//Supports weighted selection too, optionally
-/datum/outfit/New()
-	for (var/a in ALL_OUTFIT_SLOTS)
-		if (islist(vars[a]))
-			contains_randomisation = TRUE
-			all_possible_types += vars[a]
-			vars[a] = pickweight(vars[a])
-			all_types += vars[a]
-		else if(vars[a])
-			all_possible_types += vars[a]
-			all_types += vars[a]
-	.=..()
+	/**
+	  * list of items that should go in the backpack of the user
+	  *
+	  * Format of this list should be: list(path=count,otherpath=count)
+	  */
+	var/list/backpack_contents = null
 
+	/// Internals box. Will be inserted at the start of backpack_contents
+	var/box
+
+	/** 
+	  * Any implants the mob should start implanted with
+	  *
+	  * Format of this list is (typepath, typepath, typepath)
+	  */
+	var/list/implants = null
+
+  /// Any undershirt. While on humans it is a string, here we use paths to stay consistent with the rest of the equips.
+	var/datum/sprite_accessory/undershirt = null
+
+	/// Any clothing accessory item
+	var/accessory = null
+
+	/// Set to FALSE if your outfit requires runtime parameters
+	var/can_be_admin_equipped = TRUE
+
+	/**
+	  * extra types for chameleon outfit changes, mostly guns
+	  *
+	  * Format of this list is (typepath, typepath, typepath)
+	  *
+	  * These are all added and returns in the list for get_chamelon_diguise_info proc
+	  */
+	var/list/chameleon_extras
+	
+//Spawns the entire contents of the outfit into a location.
+//This could be a turf or a container, it should probably be one of those two
+/datum/outfit/proc/spawn_at(var/atom/location)
+	var/list/paths = get_all_item_paths()
+	var/list/items = list()
+	for (var/a in paths)
+		while (paths[a] > 0)
+			items.Add(new a)
+			paths[a]--
+
+	for (var/obj/a in items)
+		if (location.GetComponent(/datum/component/storage))
+			SEND_SIGNAL(location, COMSIG_TRY_STORAGE_INSERT, a, null, TRUE, TRUE)
+		else
+			a.forceMove(location)
+			
+//Returns a list of all the item paths this outfit contains, along with a quantity
+//Returned list is in the format path = quantity
+/datum/outfit/proc/get_all_item_paths()
+	var/list/data = list()
+	for (var/item in all_types)
+		data[item] = 1
+	for (var/implant in implants)
+		data[implant] = 1
+
+	data.Add(backpack_contents)
+	return data
+
+/**
+  * Called at the start of the equip proc
+  *
+  * Override to change the value of the slots depending on client prefs, species and
+  * other such sources of change
+  *
+  * Extra Arguments
+  * * visualsOnly true if this is only for display (in the character setup screen)
+  *
+  * If visualsOnly is true, you can omit any work that doesn't visually appear on the character sprite
+  */
 /datum/outfit/proc/pre_equip(mob/living/carbon/human/H, visualsOnly = FALSE)
-	//to be overriden for customization depending on client prefs,species etc
+	//to be overridden for customization depending on client prefs,species etc
 	return
 
+/**
+  * Called after the equip proc has finished
+  *
+  * All items are on the mob at this point, use this proc to toggle internals
+  * fiddle with id bindings and accesses etc
+  *
+  * Extra Arguments
+  * * visualsOnly true if this is only for display (in the character setup screen)
+  *
+  * If visualsOnly is true, you can omit any work that doesn't visually appear on the character sprite
+  */
 /datum/outfit/proc/post_equip(mob/living/carbon/human/H, visualsOnly = FALSE)
-	//to be overriden for toggling internals, id binding, access etc
+	//to be overridden for toggling internals, id binding, access etc
 	return
 
-/datum/outfit/proc/equip(mob/living/carbon/human/H, visualsOnly = FALSE, var/overwrite = FALSE)
+/**
+  * Equips all defined types and paths to the mob passed in
+  *
+  * Extra Arguments
+  * * visualsOnly true if this is only for display (in the character setup screen)
+  *
+  * If visualsOnly is true, you can omit any work that doesn't visually appear on the character sprite
+  */
+/datum/outfit/proc/equip(mob/living/carbon/human/H, visualsOnly = FALSE)
 	pre_equip(H, visualsOnly)
 
 	//Start with uniform,suit,backpack for additional slots
 	if(uniform)
-		if (overwrite && H.w_uniform)
-			H.deleteWornItem(H.w_uniform)
-		H.equip_to_slot_or_del(new uniform(H),SLOT_W_UNIFORM)
+		H.equip_to_slot_or_del(new uniform(H),ITEM_SLOT_ICLOTHING, TRUE)
 	if(suit)
-		if (overwrite && H.wear_suit)
-			H.deleteWornItem(H.wear_suit)
-		H.equip_to_slot_or_del(new suit(H),SLOT_WEAR_SUIT)
+		H.equip_to_slot_or_del(new suit(H),ITEM_SLOT_OCLOTHING, TRUE)
 	if(back)
-		if (overwrite && H.back)
-			H.deleteWornItem(H.back)
-		H.equip_to_slot_or_del(new back(H),SLOT_BACK)
+		H.equip_to_slot_or_del(new back(H),ITEM_SLOT_BACK, TRUE)
 	if(belt)
-		if (overwrite && H.belt)
-			H.deleteWornItem(H.belt)
-		H.equip_to_slot_or_del(new belt(H),SLOT_BELT)
+		H.equip_to_slot_or_del(new belt(H),ITEM_SLOT_BELT, TRUE)
 	if(gloves)
-		if (overwrite && H.gloves)
-			H.deleteWornItem(H.gloves)
-		H.equip_to_slot_or_del(new gloves(H),SLOT_GLOVES)
+		H.equip_to_slot_or_del(new gloves(H),ITEM_SLOT_GLOVES, TRUE)
 	if(shoes)
-		if (overwrite && H.shoes)
-			H.deleteWornItem(H.shoes)
-		H.equip_to_slot_or_del(new shoes(H),SLOT_SHOES)
+		H.equip_to_slot_or_del(new shoes(H),ITEM_SLOT_FEET, TRUE)
 	if(head)
-		if (overwrite && H.head)
-			H.deleteWornItem(H.head)
-		H.equip_to_slot_or_del(new head(H),SLOT_HEAD)
+		H.equip_to_slot_or_del(new head(H),ITEM_SLOT_HEAD, TRUE)
 	if(mask)
-		if (overwrite && H.wear_mask)
-			H.deleteWornItem(H.wear_mask)
-		H.equip_to_slot_or_del(new mask(H),SLOT_WEAR_MASK)
+		H.equip_to_slot_or_del(new mask(H),ITEM_SLOT_MASK, TRUE)
 	if(neck)
-		if (overwrite && H.wear_neck)
-			H.deleteWornItem(H.wear_neck)
-		H.equip_to_slot_or_del(new neck(H),SLOT_NECK)
+		H.equip_to_slot_or_del(new neck(H),ITEM_SLOT_NECK, TRUE)
 	if(ears)
-		if (overwrite && H.ears)
-			H.deleteWornItem(H.ears)
-		H.equip_to_slot_or_del(new ears(H),SLOT_EARS)
+		H.equip_to_slot_or_del(new ears(H),ITEM_SLOT_EARS, TRUE)
 	if(glasses)
-		if (overwrite && H.glasses)
-			H.deleteWornItem(H.glasses)
-		H.equip_to_slot_or_del(new glasses(H),SLOT_GLASSES)
+		H.equip_to_slot_or_del(new glasses(H),ITEM_SLOT_EYES, TRUE)
 	if(id)
-		if (overwrite && H.wear_id)
-			H.deleteWornItem(H.wear_id)
-		H.equip_to_slot_or_del(new id(H),SLOT_WEAR_ID)
+		H.equip_to_slot_or_del(new id(H),ITEM_SLOT_ID, TRUE)
 	if(suit_store)
-		if (overwrite && H.s_store)
-			H.deleteWornItem(H.s_store)
-		H.equip_to_slot_or_del(new suit_store(H),SLOT_S_STORE)
+		H.equip_to_slot_or_del(new suit_store(H),ITEM_SLOT_SUITSTORE, TRUE)
+
+	if(undershirt)
+		H.undershirt = initial(undershirt.name)
 
 	if(accessory)
 		var/obj/item/clothing/under/U = H.w_uniform
@@ -124,16 +231,23 @@
 
 	if(!visualsOnly) // Items in pockets or backpack don't show up on mob's icon.
 		if(l_pocket)
-			H.equip_to_slot_or_del(new l_pocket(H),SLOT_L_STORE)
+			H.equip_to_slot_or_del(new l_pocket(H),ITEM_SLOT_LPOCKET, TRUE)
 		if(r_pocket)
-			H.equip_to_slot_or_del(new r_pocket(H),SLOT_R_STORE)
+			H.equip_to_slot_or_del(new r_pocket(H),ITEM_SLOT_RPOCKET, TRUE)
+
+		if(box)
+			if(!backpack_contents)
+				backpack_contents = list()
+			backpack_contents.Insert(1, box)
+			backpack_contents[box] = 1
+
 		if(backpack_contents)
 			for(var/path in backpack_contents)
 				var/number = backpack_contents[path]
 				if(!isnum(number))//Default to 1
 					number = 1
 				for(var/i in 1 to number)
-					H.equip_to_slot_or_del(new path(H),SLOT_IN_BACKPACK)
+					H.equip_to_slot_or_del(new path(H),ITEM_SLOT_BACKPACK, TRUE)
 
 	if(!H.head && toggle_helmet && istype(H.wear_suit, /obj/item/clothing/suit/space/hardsuit))
 		var/obj/item/clothing/suit/space/hardsuit/HS = H.wear_suit
@@ -154,27 +268,13 @@
 	H.update_body()
 	return TRUE
 
-
-
-//Spawns the entire contents of the outfit into a location.
-//This could be a turf or a container, it should probably be one of those two
-/datum/outfit/proc/spawn_at(var/atom/location)
-	var/list/paths = get_all_item_paths()
-	var/list/items = list()
-	for (var/a in paths)
-		while (paths[a] > 0)
-			items.Add(new a)
-			paths[a]--
-
-	for (var/obj/a in items)
-		if (location.GetComponent(/datum/component/storage))
-			SEND_SIGNAL(location, COMSIG_TRY_STORAGE_INSERT, a, null, TRUE, TRUE)
-		else
-			a.forceMove(location)
-
-
-
-
+/**
+  * Apply a fingerprint from the passed in human to all items in the outfit
+  *
+  * Used for forensics setup when the mob is first equipped at roundstart
+  * essentially calls add_fingerprint to every defined item on the human
+  *
+  */
 /datum/outfit/proc/apply_fingerprints(mob/living/carbon/human/H)
 	if(!istype(H))
 		return
@@ -216,49 +316,87 @@
 		I.add_fingerprint(H,1)
 	return 1
 
+/// Return a list of all the types that are required to disguise as this outfit type
 /datum/outfit/proc/get_chameleon_disguise_info()
 	var/list/types = list(uniform, suit, back, belt, gloves, shoes, head, mask, neck, ears, glasses, id, l_pocket, r_pocket, suit_store, r_hand, l_hand)
 	types += chameleon_extras
 	listclearnulls(types)
 	return types
 
-//Returns a list of all the item paths this outfit contains, along with a quantity
-//Returned list is in the format path = quantity
-/datum/outfit/proc/get_all_item_paths()
-	var/list/data = list()
-	for (var/item in all_types)
-		data[item] = 1
-	for (var/implant in implants)
-		data[implant] = 1
+/// Return a json list of this outfit
+/datum/outfit/proc/get_json_data()
+	. = list()
+	.["outfit_type"] = type
+	.["name"] = name
+	.["uniform"] = uniform
+	.["suit"] = suit
+	.["toggle_helmet"] = toggle_helmet
+	.["back"] = back
+	.["belt"] = belt
+	.["gloves"] = gloves
+	.["shoes"] = shoes
+	.["head"] = head
+	.["mask"] = mask
+	.["neck"] = neck
+	.["ears"] = ears
+	.["glasses"] = glasses
+	.["id"] = id
+	.["l_pocket"] = l_pocket
+	.["r_pocket"] = r_pocket
+	.["suit_store"] = suit_store
+	.["r_hand"] = r_hand
+	.["l_hand"] = l_hand
+	.["internals_slot"] = internals_slot
+	.["backpack_contents"] = backpack_contents
+	.["box"] = box
+	.["implants"] = implants
+	.["accessory"] = accessory
 
-	data.Add(backpack_contents)
-	return data
+/// Prompt the passed in mob client to download this outfit as a json blob
+/datum/outfit/proc/save_to_file(mob/admin)
+	var/stored_data = get_json_data()
+	var/json = json_encode(stored_data)
+	//Kinda annoying but as far as i can tell you need to make actual file.
+	var/f = file("data/TempOutfitUpload")
+	fdel(f)
+	WRITE_FILE(f,json)
+	admin << ftp(f,"[name].json")
 
-//Returns a list of all the paths this outfit could contain. This includes the entireity of random lists
-/datum/outfit/proc/get_all_possible_item_paths()
-	var/list/data = list()
-	for (var/item in all_possible_types)
-		data[item] = 1
-	for (var/implant in implants)
-		data[implant] = 1
-
-	data.Add(backpack_contents)
-	return data
-
-
-//Returns data useful for displaying the contents of this outfit in a UI
-//The return format is a list of lists, with each sublist being:
-	//"name" = name of the item
-	//"icon" = path of the cached icon for the typepath
-	//"quantity" = how many of the item there are. 1 in most cases
-/datum/outfit/ui_data()
-	var/list/data = list()
-	var/list/items = get_all_item_paths()
-	for (var/item in items)
-		var/list/subdata = list()
-		var/datum/outfit/d = item
-		subdata["name"] = initial(d.name)
-		subdata["icon"] = sanitize_filename("[item].png")
-		subdata["quantity"] = items[item]
-		data += list(subdata)
-	return data
+/// Create an outfit datum from a list of json data
+/datum/outfit/proc/load_from(list/outfit_data)
+	//This could probably use more strict validation
+	name = outfit_data["name"]
+	uniform = text2path(outfit_data["uniform"])
+	suit = text2path(outfit_data["suit"])
+	toggle_helmet = outfit_data["toggle_helmet"]
+	back = text2path(outfit_data["back"])
+	belt = text2path(outfit_data["belt"])
+	gloves = text2path(outfit_data["gloves"])
+	shoes = text2path(outfit_data["shoes"])
+	head = text2path(outfit_data["head"])
+	mask = text2path(outfit_data["mask"])
+	neck = text2path(outfit_data["neck"])
+	ears = text2path(outfit_data["ears"])
+	glasses = text2path(outfit_data["glasses"])
+	id = text2path(outfit_data["id"])
+	l_pocket = text2path(outfit_data["l_pocket"])
+	r_pocket = text2path(outfit_data["r_pocket"])
+	suit_store = text2path(outfit_data["suit_store"])
+	r_hand = text2path(outfit_data["r_hand"])
+	l_hand = text2path(outfit_data["l_hand"])
+	internals_slot = outfit_data["internals_slot"]
+	var/list/backpack = outfit_data["backpack_contents"]
+	backpack_contents = list()
+	for(var/item in backpack)
+		var/itype = text2path(item)
+		if(itype)
+			backpack_contents[itype] = backpack[item]
+	box = text2path(outfit_data["box"])
+	var/list/impl = outfit_data["implants"]
+	implants = list()
+	for(var/I in impl)
+		var/imptype = text2path(I)
+		if(imptype)
+			implants += imptype
+	accessory = text2path(outfit_data["accessory"])
+	return TRUE

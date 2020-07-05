@@ -87,3 +87,6 @@
 	owner.do_jitter_animation(living_transformation_time)
 	owner.Stun(living_transformation_time)
 	to_chat(owner, "<span class='alertalien'>You are now a zombie!</span>")
+	
+/obj/item/organ/zombie_infection/nodamage
+	causes_damage = FALSE

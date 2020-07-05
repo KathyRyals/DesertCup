@@ -26,6 +26,11 @@
 	name = "law office's rubber stamp"
 	icon_state = "stamp-law"
 	item_color = "cargo"
+	
+/obj/item/stamp/centcom
+	name = "CentCom rubber stamp"
+	icon_state = "stamp-centcom"
+	dye_color = "centcom"
 
 /obj/item/stamp/captain
 	name = "captain's rubber stamp"

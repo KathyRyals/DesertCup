@@ -193,10 +193,9 @@ Turf and target are separate in case you want to teleport some distance from a t
 	var/newname
 	var/loop = 1
 	var/safety = 0
-	var/banned = jobban_isbanned(src, "appearance")
 
 	while(loop && safety < 5)
-		if(C && C.prefs.custom_names[role] && !safety && !banned)
+		if(C && C.prefs.custom_names[role] && !safety)
 			newname = C.prefs.custom_names[role]
 		else
 			switch(role)
@@ -442,9 +441,6 @@ Turf and target are separate in case you want to teleport some distance from a t
 			. += "/([fallback_name])"
 
 	return .
-
-/proc/key_name_admin(whom, include_name = 1)
-	return key_name(whom, 1, include_name)
 
 /proc/get_mob_by_ckey(key)
 	if(!key)
@@ -1260,17 +1256,7 @@ GLOBAL_REAL_VAR(list/stack_trace_storage)
 //returns the number of ticks slept
 /proc/stoplag(initial_delay)
 	if (!Master || !(Master.current_runlevel & RUNLEVELS_DEFAULT))
-		sleep(world.tick_lag)
-		return 1
-	if (!initial_delay)
-		initial_delay = world.tick_lag
-	. = 0
-	var/i = DS2TICKS(initial_delay)
-	do
-		. += CEILING(i*DELTA_CALC, 1)
-		sleep(i*world.tick_lag*DELTA_CALC)
-		i *= 2
-	while (TICK_USAGE > min(TICK_LIMIT_TO_RUN, Master.current_ticklimit))
+	return TRUE
 
 #undef DELTA_CALC
 

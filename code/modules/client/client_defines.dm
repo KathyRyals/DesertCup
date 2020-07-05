@@ -18,7 +18,8 @@
 	var/total_message_count = 0
 	///Next tick to reset the total message counter
 	var/total_count_reset = 0
-	var/ircreplyamount = 0
+	///Internal counter for clients sending external (IRC/Discord) relay messages via ahelp to prevent spamming. Set to a number every time an admin reply is sent, decremented for every client send.
+	var/externalreplyamount = 0
 
 		/////////
 		//OTHER//
@@ -72,7 +73,7 @@
 	var/list/topiclimiter
 	var/list/clicklimiter
 
-	var/datum/chatOutput/chatOutput
+	var/datum/chat_output/chatOutput
 
 	var/list/credits //lazy list of all credit object bound to this client
 
@@ -85,3 +86,12 @@
 
 	/// Messages currently seen by this client
 	var/list/seen_messages
+	var/datum/view_data/view_size
+	
+	// List of all asset filenames sent to this client by the asset cache, along with their assoicated md5s
+	var/list/sent_assets = list()
+	/// List of all completed blocking send jobs awaiting acknowledgement by send_asset
+	var/list/completed_asset_jobs = list()
+	/// Last asset send job id.
+	var/last_asset_job = 0
+	var/last_completed_asset_job = 0

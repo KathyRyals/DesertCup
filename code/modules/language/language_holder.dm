@@ -3,9 +3,20 @@
 	var/list/shadow_languages = list()
 	var/only_speaks_language = null
 	var/selected_default_language = null
-	var/datum/language_menu/language_menu
-
+	
+	/// Understood languages.
+	var/list/understood_languages = list(/datum/language/common = list(LANGUAGE_MIND))
+	/// A list of languages that can be spoken. Tongue organ may also set limits beyond this list.
+	var/list/spoken_languages = list(/datum/language/common = list(LANGUAGE_ATOM))
+	/// A list of blocked languages. Used to prevent understanding and speaking certain languages, ie for certain mobs, mutations etc.
+	var/list/blocked_languages = list()
+	/// If true, overrides tongue limitations.
 	var/omnitongue = FALSE
+	/// Handles displaying the language menu UI.
+	var/datum/language_menu/language_menu
+	/// Currently spoken language
+	var/selected_language
+	/// Tracks the entity that owns the holder.
 	var/owner
 
 /datum/language_holder/New(owner)
@@ -135,6 +146,12 @@
 /datum/language_holder/synthetic
 	languages = list(/datum/language/common)
 	shadow_languages = list(/datum/language/common, /datum/language/machine, /datum/language/draconic)
+	
+/datum/language_holder/moth
+	understood_languages = list(/datum/language/common = list(LANGUAGE_ATOM),
+								/datum/language/moffic = list(LANGUAGE_ATOM))
+	spoken_languages = list(/datum/language/common = list(LANGUAGE_ATOM),
+							/datum/language/moffic = list(LANGUAGE_ATOM))
 
 /datum/language_holder/empty
 	languages = list()

@@ -334,7 +334,7 @@
 				parrot_state |= PARROT_FLEE
 			icon_state = icon_living
 			drop_held_item(0)
-	else if(istype(O, /obj/item/reagent_containers/food/snacks/cracker)) //Poly wants a cracker.
+	else if(istype(O, /obj/item/reagent_containers/food/snacks/cracker)) //poly wants a cracker.
 		qdel(O)
 		if(health < maxHealth)
 			adjustBruteLoss(-10)
@@ -877,7 +877,7 @@
 /*
  * Sub-types
  */
-/mob/living/simple_animal/parrot/Poly
+/mob/living/simple_animal/parrot/poly
 	name = "Poly"
 	desc = "Poly the Parrot. An expert on quantum cracker theory."
 	speak = list("Poly wanna cracker!", ":e Check the crystal, you chucklefucks!",":e Wire the solars, you lazy bums!",":e WHO TOOK THE DAMN HARDSUITS?",":e OH GOD ITS ABOUT TO DELAMINATE CALL THE SHUTTLE")
@@ -888,7 +888,7 @@
 	var/longest_survival = 0
 	var/longest_deathstreak = 0
 
-/mob/living/simple_animal/parrot/Poly/Initialize()
+/mob/living/simple_animal/parrot/poly/Initialize()
 	ears = new /obj/item/radio/headset/headset_eng(src)
 	available_channels = list(":e")
 	Read_Memory()
@@ -909,33 +909,33 @@
 
 	. = ..()
 
-/mob/living/simple_animal/parrot/Poly/Life()
+/mob/living/simple_animal/parrot/poly/Life()
 	if(!stat && SSticker.current_state == GAME_STATE_FINISHED && !memory_saved)
 		Write_Memory(FALSE)
 		memory_saved = TRUE
 	..()
 
-/mob/living/simple_animal/parrot/Poly/death(gibbed)
+/mob/living/simple_animal/parrot/poly/death(gibbed)
 	if(!memory_saved)
 		Write_Memory(TRUE)
 	if(rounds_survived == longest_survival || rounds_survived == longest_deathstreak || prob(0.666))
-		var/mob/living/simple_animal/parrot/Poly/ghost/G = new(loc)
+		var/mob/living/simple_animal/parrot/poly/ghost/G = new(loc)
 		if(mind)
 			mind.transfer_to(G)
 		else
 			G.key = key
 	..(gibbed)
 
-/mob/living/simple_animal/parrot/Poly/proc/Read_Memory()
-	if(fexists("data/npc_saves/Poly.sav")) //legacy compatability to convert old format to new
-		var/savefile/S = new /savefile("data/npc_saves/Poly.sav")
+/mob/living/simple_animal/parrot/poly/proc/Read_Memory()
+	if(fexists("data/npc_saves/poly.sav")) //legacy compatability to convert old format to new
+		var/savefile/S = new /savefile("data/npc_saves/poly.sav")
 		S["phrases"] 			>> speech_buffer
 		S["roundssurvived"]		>> rounds_survived
 		S["longestsurvival"]	>> longest_survival
 		S["longestdeathstreak"] >> longest_deathstreak
-		fdel("data/npc_saves/Poly.sav")
+		fdel("data/npc_saves/poly.sav")
 	else
-		var/json_file = file("data/npc_saves/Poly.json")
+		var/json_file = file("data/npc_saves/poly.json")
 		if(!fexists(json_file))
 			return
 		var/list/json = json_decode(file2text(json_file))
@@ -946,8 +946,8 @@
 	if(!islist(speech_buffer))
 		speech_buffer = list()
 
-/mob/living/simple_animal/parrot/Poly/proc/Write_Memory(dead)
-	var/json_file = file("data/npc_saves/Poly.json")
+/mob/living/simple_animal/parrot/poly/proc/Write_Memory(dead)
+	var/json_file = file("data/npc_saves/poly.json")
 	var/list/file_data = list()
 	if(islist(speech_buffer))
 		file_data["phrases"] = speech_buffer
@@ -968,13 +968,13 @@
 	fdel(json_file)
 	WRITE_FILE(json_file, json_encode(file_data))
 
-/mob/living/simple_animal/parrot/Poly/ratvar_act()
+/mob/living/simple_animal/parrot/poly/ratvar_act()
 	playsound(src, 'sound/magic/clockwork/fellowship_armory.ogg', 75, TRUE)
 	var/mob/living/simple_animal/parrot/clock_hawk/H = new(loc)
 	H.setDir(dir)
 	qdel(src)
 
-/mob/living/simple_animal/parrot/Poly/ghost
+/mob/living/simple_animal/parrot/poly/ghost
 	name = "The Ghost of Poly"
 	desc = "Doomed to squawk the Earth."
 	color = "#FFFFFF77"
@@ -983,16 +983,16 @@
 	incorporeal_move = INCORPOREAL_MOVE_BASIC
 	butcher_results = list(/obj/item/ectoplasm = 1)
 
-/mob/living/simple_animal/parrot/Poly/ghost/Initialize()
+/mob/living/simple_animal/parrot/poly/ghost/Initialize()
 	memory_saved = TRUE //At this point nothing is saved
 	. = ..()
 
-/mob/living/simple_animal/parrot/Poly/ghost/handle_automated_speech()
+/mob/living/simple_animal/parrot/poly/ghost/handle_automated_speech()
 	if(ismob(loc))
 		return
 	..()
 
-/mob/living/simple_animal/parrot/Poly/ghost/handle_automated_movement()
+/mob/living/simple_animal/parrot/poly/ghost/handle_automated_movement()
 	if(isliving(parrot_interest))
 		if(!ishuman(parrot_interest))
 			parrot_interest = null
@@ -1001,7 +1001,7 @@
 			Possess(parrot_interest)
 	..()
 
-/mob/living/simple_animal/parrot/Poly/ghost/proc/Possess(mob/living/carbon/human/H)
+/mob/living/simple_animal/parrot/poly/ghost/proc/Possess(mob/living/carbon/human/H)
 	if(!ishuman(H))
 		return
 	var/datum/disease/parrot_possession/P = new

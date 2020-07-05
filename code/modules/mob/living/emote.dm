@@ -409,10 +409,7 @@
 		. = FALSE
 
 /datum/emote/living/custom/run_emote(mob/user, params, type_override = null)
-	if(jobban_isbanned(user, "emote"))
-		to_chat(user, "You cannot send custom emotes (banned).")
-		return FALSE
-	else if(QDELETED(user))
+	if(QDELETED(user))
 		return FALSE
 	else if(user.client && user.client.prefs.muted & MUTE_IC)
 		to_chat(user, "You cannot send IC messages (muted).")
@@ -518,3 +515,14 @@
 		to_chat(user, "<span class='notice'>You ready your slapping hand.</span>")
 	else
 		to_chat(user, "<span class='warning'>You're incapable of slapping in your current state.</span>")
+		
+
+/datum/emote/inhale
+	key = "inhale"
+	key_third_person = "inhales"
+	message = "breathes in."
+
+/datum/emote/exhale
+	key = "exhale"
+	key_third_person = "exhales"
+	message = "breathes out."

@@ -252,7 +252,7 @@ GLOBAL_LIST_INIT(ghost_others_options, list(GHOST_OTHERS_SIMPLE, GHOST_OTHERS_DE
 GLOBAL_LIST_INIT(pda_styles, list(MONO, VT, ORBITRON, SHARE))
 
 //Color Defines
-#define OOC_COLOR	"#002eb8"
+//#define OOC_COLOR	"#386aff"
 
 /////////////////////////////////////
 // atom.appearence_flags shortcuts //
@@ -301,6 +301,7 @@ GLOBAL_LIST_INIT(pda_styles, list(MONO, VT, ORBITRON, SHARE))
 #define FIRST_DIAG_STEP 1
 #define SECOND_DIAG_STEP 2
 
+#define DEADCHAT_ANNOUNCEMENT "announcement"
 #define DEADCHAT_ARRIVALRATTLE "arrivalrattle"
 #define DEADCHAT_DEATHRATTLE "deathrattle"
 #define DEADCHAT_REGULAR "regular-deadchat"
@@ -458,3 +459,25 @@ GLOBAL_LIST_INIT(pda_styles, list(MONO, VT, ORBITRON, SHARE))
 #define LOCKED 2
 
 #define SPAWNER_SEED rand(1, 10)
+
+//Misc text define. Does 4 spaces. Used as a makeshift tabulator.
+#define FOURSPACES "&nbsp;&nbsp;&nbsp;&nbsp;"
+
+#define CLIENT_FROM_VAR(I) (ismob(I) ? I:client : (istype(I, /client) ? I : (istype(I, /datum/mind) ? I:current?:client : null)))
+
+//chem grenades defines
+#define GRENADE_EMPTY 1
+#define GRENADE_WIRED 2
+#define GRENADE_READY 3
+
+// Anonymous names defines (used in the secrets panel)
+
+#define ANON_DISABLED "" //so it's falsey
+#define ANON_RANDOMNAMES "Random Default"
+#define ANON_EMPLOYEENAMES "Employees"
+
+// The alpha we give to stuff under tiles, if they want it
+#define ALPHA_UNDERTILE 128
+
+#define AREASELECT_CORNERA "corner A"
+#define AREASELECT_CORNERB "corner B"

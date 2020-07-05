@@ -1,3 +1,8 @@
+#This is an unofficial "fork" of Fallout 13.
+##We do not claim to be Fallout 13
+
+This fork is mainly intended to remove ERP content from the original Fallout 13 Alpha 0.5 codebase while also updating numerous ascepts of the codebase to current /tg/station levels.
+
 ## F13 codebase 
 
 [![Build Status](https://travis-ci.org/BadDeathclaw/TG-Claw.svg?branch=master)](https://travis-ci.org/BadDeathclaw/TG-Claw) [![Krihelimeter](https://www.krihelinator.xyz/badge/BadDeathclaw/TG-Claw)](http://www.krihelinator.xyz/repositories/BadDeathclaw/TG-Claw) 

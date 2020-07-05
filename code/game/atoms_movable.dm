@@ -2,6 +2,9 @@
 	layer = OBJ_LAYER
 	var/last_move = null
 	var/anchored = FALSE
+	var/move_resist = MOVE_RESIST_DEFAULT
+	var/move_force = MOVE_FORCE_DEFAULT
+	var/pull_force = PULL_FORCE_DEFAULT
 	var/drag_delay = 0.15 SECONDS
 	var/datum/thrownthing/throwing = null
 	var/throw_speed = 2 //How many tiles to move per ds when being thrown. Float values are fully supported

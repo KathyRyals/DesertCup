@@ -39,6 +39,9 @@
 #define FREQ_LOCATOR_IMPLANT 1451
 #define FREQ_SIGNALER 1457  // the default for new signalers
 #define FREQ_COMMON 1459  // Common comms frequency, dark green
+#define RADIO_CHANNEL_CENTCOM "CentCom"
+#define RADIO_CHANNEL_SYNDICATE "Syndicate"
+#define RADIO_CHANNEL_COMMON "Common"
 
 #define MAX_FREQ 1489 // ------------------------------------------------------
 

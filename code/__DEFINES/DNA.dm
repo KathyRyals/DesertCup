@@ -112,3 +112,12 @@
 #define ORGAN_SLOT_BRAIN_ANTIDROP "brain_antidrop"
 #define ORGAN_SLOT_BRAIN_ANTISTUN "brain_antistun"
 #define ORGAN_SLOT_TAIL "tail"
+
+/// Do not draw eyes or eyeless overlay
+#define NOEYESPRITES	17
+
+//organ defines
+#define STANDARD_ORGAN_THRESHOLD 	100
+#define STANDARD_ORGAN_HEALING 		0.001
+/// designed to fail organs when left to decay for ~15 minutes
+#define STANDARD_ORGAN_DECAY		0.00222

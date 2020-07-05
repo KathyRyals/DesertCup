@@ -1,3 +1,5 @@
+GLOBAL_LIST_EMPTY(antagonist_teams)
+
 //A barebones antagonist team.
 /datum/team
 	var/list/datum/mind/members = list()

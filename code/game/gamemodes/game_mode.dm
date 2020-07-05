@@ -18,12 +18,14 @@
 	var/votable = 1
 	var/probability = 0
 	var/false_report_weight = 0 //How often will this show up incorrectly in a centcom report?
+	var/report_type = "invalid" //gamemodes with the same report type will not show up in the command report together.
 	var/station_was_nuked = 0 //see nuclearbomb.dm and malfunction.dm
 	var/nuke_off_station = 0 //Used for tracking where the nuke hit
 	var/round_ends_with_antag_death = 0 //flags the "one verse the station" antags as such
 	var/list/datum/mind/antag_candidates = list()	// List of possible starting antags goes here
 	var/list/restricted_jobs = list()	// Jobs it doesn't make sense to be.  I.E chaplain or AI cultist
 	var/list/protected_jobs = list()	// Jobs that can't be traitors because
+	var/list/required_jobs = list()		// alternative required job groups eg list(list(cap=1),list(hos=1,sec=2)) translates to one captain OR one hos and two secmans
 	var/required_players = 0
 	var/maximum_players = -1 // -1 is no maximum, positive numbers limit the selection of a mode on overstaffed stations
 	var/required_enemies = 0
@@ -47,6 +49,10 @@
 	var/allow_persistence_save = TRUE
 
 	var/gamemode_ready = FALSE //Is the gamemode all set up and ready to start checking for ending conditions.
+	var/setup_error		//What stopepd setting up the mode.
+	
+	/// Associative list of current players, in order: living players, living antagonists, dead players and observers.
+	var/list/list/current_players = list(CURRENT_LIVING_PLAYERS = list(), CURRENT_LIVING_ANTAGS = list(), CURRENT_DEAD_PLAYERS = list(), CURRENT_OBSERVERS = list())
 
 /datum/game_mode/proc/announce() //Shows the gamemode's name and a fast description.
 	to_chat(world, "<b>The gamemode is: <span class='[announce_span]'>[name]</span>!</b>")
@@ -91,7 +97,7 @@
 				sql += ", "
 			sql += "commit_hash = '[GLOB.revdata.originmastercommit]'"
 		if(sql)
-			var/datum/DBQuery/query_round_game_mode = SSdbcore.NewQuery("UPDATE [format_table_name("round")] SET [sql] WHERE id = [GLOB.round_id]")
+			var/datum/db_query/query_round_game_mode = SSdbcore.NewQuery("UPDATE [format_table_name("round")] SET [sql] WHERE id = [GLOB.round_id]")
 			query_round_game_mode.Execute()
 			qdel(query_round_game_mode)
 	if(report)
@@ -175,7 +181,7 @@
 		round_converted = 0
 		return
 	 //somewhere between 1 and 3 minutes from now
-	if(!CONFIG_GET(keyed_flag_list/midround_antag)[SSticker.mode.config_tag])
+	if(!CONFIG_GET(keyed_list/midround_antag)[SSticker.mode.config_tag])
 		round_converted = 0
 		return 1
 	for(var/mob/living/carbon/human/H in antag_candidates)
@@ -203,8 +209,8 @@
 		return TRUE
 	if(station_was_nuked)
 		return TRUE
-	var/list/continuous = CONFIG_GET(keyed_flag_list/continuous)
-	var/list/midround_antag = CONFIG_GET(keyed_flag_list/midround_antag)
+	var/list/continuous = CONFIG_GET(keyed_list/continuous)
+	var/list/midround_antag = CONFIG_GET(keyed_list/midround_antag)
 	if(!round_converted && (!continuous[config_tag] || (continuous[config_tag] && midround_antag[config_tag]))) //Non-continuous or continous with replacement antags
 		if(!continuous_sanity_checked) //make sure we have antags to be checking in the first place
 			for(var/mob/Player in GLOB.mob_list)
@@ -357,7 +363,7 @@
 	for(var/mob/dead/new_player/player in players)
 		if(player.client && player.ready == PLAYER_READY_TO_PLAY)
 			if(role in player.client.prefs.be_special)
-				if(!jobban_isbanned(player, ROLE_SYNDICATE) && !QDELETED(player) && !jobban_isbanned(player, role) && !QDELETED(player)) //Nodrak/Carn: Antag Job-bans
+				if(!QDELETED(player)) //Nodrak/Carn: Antag Job-bans
 					if(age_check(player.client)) //Must be older than the minimum age
 						candidates += player.mind				// Get a list of all the people who want to be the antagonist for this round
 
@@ -371,7 +377,7 @@
 		for(var/mob/dead/new_player/player in players)
 			if(player.client && player.ready == PLAYER_READY_TO_PLAY)
 				if(!(role in player.client.prefs.be_special)) // We don't have enough people who want to be antagonist, make a separate list of people who don't want to be one
-					if(!jobban_isbanned(player, ROLE_SYNDICATE) && !QDELETED(player)  && !jobban_isbanned(player, role) && !QDELETED(player) ) //Nodrak/Carn: Antag Job-bans
+					if(!QDELETED(player) ) //Nodrak/Carn: Antag Job-bans
 						drafted += player.mind
 
 	if(restricted_jobs)
@@ -544,3 +550,8 @@
 		SSticker.news_report = STATION_EVACUATED
 		if(SSshuttle.emergency.is_hijacked())
 			SSticker.news_report = SHUTTLE_HIJACK
+			
+/// Mode specific admin panel.
+/datum/game_mode/proc/admin_panel()
+	return
+

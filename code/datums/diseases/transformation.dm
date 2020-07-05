@@ -49,10 +49,6 @@
 	if(istype(affected_mob, /mob/living/carbon) && affected_mob.stat != DEAD)
 		if(stage5)
 			to_chat(affected_mob, pick(stage5))
-		if(jobban_isbanned(affected_mob, new_form))
-			if(!QDELETED(affected_mob))
-				affected_mob.death(1)
-			return
 		if(QDELETED(affected_mob))
 			return
 		if(affected_mob.notransform)

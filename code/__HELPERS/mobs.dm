@@ -82,8 +82,26 @@
 			return pick(GLOB.hair_styles_female_list)
 		else
 			return pick(GLOB.hair_styles_list)
+			
+/proc/random_hairstyle(gender)
+	switch(gender)
+		if(MALE)
+			return pick(GLOB.hair_styles_male_list)
+		if(FEMALE)
+			return pick(GLOB.hair_styles_female_list)
+		else
+			return pick(GLOB.hair_styles_list)
 
 /proc/random_facial_hair_style(gender)
+	switch(gender)
+		if(MALE)
+			return pick(GLOB.facial_hair_styles_male_list)
+		if(FEMALE)
+			return pick(GLOB.facial_hair_styles_female_list)
+		else
+			return pick(GLOB.facial_hair_styles_list)
+			
+/proc/random_facial_hairstyle(gender)
 	switch(gender)
 		if(MALE)
 			return pick(GLOB.facial_hair_styles_male_list)
@@ -530,7 +548,19 @@ Proc for attack log creation, because really why not
 		chosen = pick(mob_spawn_meancritters)
 	var/mob/living/simple_animal/C = new chosen(spawn_location)
 	return C
+	
+/proc/passtable_on(target, source)
+	var/mob/living/L = target
+	if (!HAS_TRAIT(L, TRAIT_PASSTABLE) && L.pass_flags & PASSTABLE)
+		ADD_TRAIT(L, TRAIT_PASSTABLE, INNATE_TRAIT)
+	ADD_TRAIT(L, TRAIT_PASSTABLE, source)
+	L.pass_flags |= PASSTABLE
 
+/proc/passtable_off(target, source)
+	var/mob/living/L = target
+	REMOVE_TRAIT(L, TRAIT_PASSTABLE, source)
+	if(!HAS_TRAIT(L, TRAIT_PASSTABLE))
+		L.pass_flags &= ~PASSTABLE
 
 /mob/proc/get_preferences()
 	if (client && client.prefs)

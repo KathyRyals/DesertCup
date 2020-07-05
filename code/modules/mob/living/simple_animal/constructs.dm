@@ -115,7 +115,7 @@
 		update_health_hud()
 
 /////////////////Juggernaut///////////////
-/mob/living/simple_animal/hostile/construct/armored
+/mob/living/simple_animal/hostile/construct/juggernaut
 	name = "Juggernaut"
 	real_name = "Juggernaut"
 	desc = "A massive, armored construct built to spearhead attacks and soak up enemy fire."
@@ -224,7 +224,7 @@
 
 
 /////////////////////////////Artificer/////////////////////////
-/mob/living/simple_animal/hostile/construct/builder
+/mob/living/simple_animal/hostile/construct/artificer
 	name = "Artificer"
 	real_name = "Artificer"
 	desc = "A bulbous construct dedicated to building and maintaining the Cult of Nar-Sie's armies."

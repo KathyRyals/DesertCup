@@ -10,6 +10,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	var/item_state = null
 	var/lefthand_file = 'icons/mob/inhands/items_lefthand.dmi'
 	var/righthand_file = 'icons/mob/inhands/items_righthand.dmi'
+	var/icon/worn_icon
 
 	//Dimensions of the icon file used when this item is worn, eg: hats.dmi
 	//eg: 32x32 sprite, 64x64 sprite, etc.
@@ -28,6 +29,7 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 
 	obj_flags = NONE
 	var/item_flags = NONE
+	var/inhand_icon_state = null
 
 	var/hitsound = null
 	var/usesound = null

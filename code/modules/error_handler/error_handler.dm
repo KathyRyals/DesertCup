@@ -86,8 +86,6 @@ GLOBAL_VAR_INIT(total_runtimes_skipped, 0)
 	var/list/usrinfo = null
 	var/locinfo
 	if(istype(usr))
-		usrinfo = list("  usr: [datum_info_line(usr)]")
-		locinfo = atom_loc_line(usr)
 		if(locinfo)
 			usrinfo += "  usr.loc: [locinfo]"
 	// The proceeding mess will almost definitely break if error messages are ever changed

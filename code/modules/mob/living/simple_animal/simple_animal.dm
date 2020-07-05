@@ -27,8 +27,22 @@
 	var/response_help   = "pokes"
 	var/response_disarm = "shoves"
 	var/response_harm   = "hits"
+	///When someone interacts with the simple animal.
+	///Help-intent verb in present continuous tense.
+	var/response_help_continuous = "pokes"
+	///Help-intent verb in present simple tense.
+	var/response_help_simple = "poke"
+	///Disarm-intent verb in present continuous tense.
+	var/response_disarm_continuous = "shoves"
+	///Disarm-intent verb in present simple tense.
+	var/response_disarm_simple = "shove"
+	///Harm-intent verb in present continuous tense.
+	var/response_harm_continuous = "hits"
+	///Harm-intent verb in present simple tense.
+	var/response_harm_simple = "hit"
 	var/harm_intent_damage = 3
-	var/force_threshold = 0 //Minimum force required to deal any damage
+	///Minimum force required to deal any damage.
+	var/force_threshold = 0
 
 	//Temperature effect
 	var/minbodytemp = 250
@@ -52,6 +66,14 @@
 	var/attack_sound = null
 	var/friendly = "nuzzles" //If the mob does no damage with it's attack
 	var/environment_smash = ENVIRONMENT_SMASH_NONE //Set to 1 to allow breaking of crates,lockers,racks,tables; 2 for walls; 3 for Rwalls
+	///Attacking, but without damage, verb in present continuous tense.
+	var/friendly_verb_continuous = "nuzzles"
+	///Attacking, but without damage, verb in present simple tense.
+	var/friendly_verb_simple = "nuzzle"
+	///Attacking verb in present continuous tense.
+	var/attack_verb_continuous = "attacks"
+	///Attacking verb in present simple tense.
+	var/attack_verb_simple = "attack"
 
 	var/speed = 1 //LETS SEE IF I CAN SET SPEEDS FOR SIMPLE MOBS WITHOUT DESTROYING EVERYTHING. Higher speed is slower, negative speed is faster
 

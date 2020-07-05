@@ -5,6 +5,26 @@
 	config_entry_value = "Game Master"
 	protection = CONFIG_ENTRY_LOCKED
 
+/datum/config_entry/flag/auto_deadmin_players
+	protection = CONFIG_ENTRY_LOCKED
+
+/datum/config_entry/number/auto_deadmin_timegate
+	config_entry_value = null
+	protection = CONFIG_ENTRY_LOCKED
+
+/datum/config_entry/flag/auto_deadmin_antagonists
+	protection = CONFIG_ENTRY_LOCKED
+
+/datum/config_entry/flag/auto_deadmin_heads
+	protection = CONFIG_ENTRY_LOCKED
+
+/datum/config_entry/flag/auto_deadmin_silicons
+	protection = CONFIG_ENTRY_LOCKED
+
+/datum/config_entry/flag/auto_deadmin_security
+	protection = CONFIG_ENTRY_LOCKED
+
+
 /datum/config_entry/string/servername	// server name (the name of the game window)
 
 /datum/config_entry/string/serversqlname	// short form server name used for the DB
@@ -13,11 +33,23 @@
 
 /datum/config_entry/number/lobby_countdown	// In between round countdown.
 	config_entry_value = 120
+	integer = FALSE
 	min_val = 0
 
 /datum/config_entry/number/round_end_countdown	// Post round murder death kill countdown
 	config_entry_value = 25
+	integer = FALSE
 	min_val = 0
+
+/datum/config_entry/flag/hub	// if the game appears on the hub or not
+
+/datum/config_entry/number/max_hub_pop //At what pop to take hub off the server
+	config_entry_value = 0 //0 means disabled
+	integer = TRUE
+	min_val = 0
+
+/datum/config_entry/string/forumurl
+	config_entry_value = "http://tgstation13.org/phpBB/index.php"
 
 /datum/config_entry/flag/blockoocurls	// log OOC channel
 
@@ -25,7 +57,7 @@
 
 /datum/config_entry/flag/log_ooc	// log OOC channel
 
-/datum/config_entry/flag/log_looc	// log LOOC channel
+/datum/config_entry/flag/log_looc //log LOOC channel
 
 /datum/config_entry/flag/log_access	// log login/logout
 
@@ -40,6 +72,12 @@
 
 /datum/config_entry/flag/log_game	// log game events
 
+/datum/config_entry/flag/log_mecha	// log mech data
+
+/datum/config_entry/flag/log_virus	// log virology data
+
+/datum/config_entry/flag/log_cloning // log cloning actions.
+
 /datum/config_entry/flag/log_vote	// log voting
 
 /datum/config_entry/flag/log_whisper	// log client whisper
@@ -48,18 +86,28 @@
 
 /datum/config_entry/flag/log_emote	// log emotes
 
+/datum/config_entry/flag/log_econ	// log economy actions
+
 /datum/config_entry/flag/log_adminchat	// log admin chat messages
 	protection = CONFIG_ENTRY_LOCKED
 
-/datum/config_entry/flag/log_pda	// log Pip-Boy 3000 messages
+/datum/config_entry/flag/log_pda	// log pda messages
+
+/datum/config_entry/flag/log_telecomms	// log telecomms messages
 
 /datum/config_entry/flag/log_twitter	// log certain expliotable parrots and other such fun things in a JSON file of twitter valid phrases.
 
 /datum/config_entry/flag/log_world_topic	// log all world.Topic() calls
 
-/datum/config_entry/flag/log_manifest	// log Wasteland Census to seperate file
+/datum/config_entry/flag/log_manifest	// log crew manifest to seperate file
+
+/datum/config_entry/flag/log_job_debug	// log roundstart divide occupations debug information to a 
+
+/datum/config_entry/flag/log_shuttle // log shuttle related actions, ie shuttle computers, shuttle manipulator, emergency console
 
 /datum/config_entry/flag/allow_admin_ooccolor	// Allows admins with relevant permissions to have their own ooc colour
+
+/datum/config_entry/flag/allow_admin_asaycolor //Allows admins with relevant permissions to have a personalized asay color
 
 /datum/config_entry/flag/allow_vote_restart	// allow votes to restart
 
@@ -284,6 +332,8 @@
 
 /datum/config_entry/string/extreme_popcap_message
 	config_entry_value = "The server is currently serving a high number of users, find alternative servers."
+	
+/datum/config_entry/flag/byond_member_bypass_popcap
 
 /datum/config_entry/flag/panic_bunker	// prevents people the server hasn't seen before from connecting
 
@@ -387,6 +437,12 @@
 
 /datum/config_entry/flag/irc_announce_new_game
 
+/datum/config_entry/string/chat_announce_new_game
+	config_entry_value = null
+
+/datum/config_entry/string/chat_new_game_notifications
+	config_entry_value = null
+
 /datum/config_entry/flag/debug_admin_hrefs
 
 /datum/config_entry/number/mc_tick_rate/base_mc_tick_rate
@@ -424,3 +480,34 @@
 
 /datum/config_entry/string/default_view
 	config_entry_value = "15x15"
+
+/datum/config_entry/string/default_view_square
+	config_entry_value = "15x15"
+
+/datum/config_entry/flag/log_pictures
+
+/datum/config_entry/flag/picture_logging_camera
+
+/datum/config_entry/flag/reopen_roundstart_suicide_roles
+
+/datum/config_entry/flag/reopen_roundstart_suicide_roles_command_positions
+
+/datum/config_entry/number/reopen_roundstart_suicide_roles_delay
+	min_val = 30
+
+/datum/config_entry/flag/reopen_roundstart_suicide_roles_command_report
+
+/datum/config_entry/flag/auto_profile
+
+// DISCORD ROLE STUFFS
+// Using strings for everything because BYOND does not like numbers this big
+// (exception to the above is required living hours haha)
+/datum/config_entry/flag/enable_discord_autorole
+
+/datum/config_entry/number/required_living_hours
+
+/datum/config_entry/string/discord_token
+
+/datum/config_entry/string/discord_guildid
+
+/datum/config_entry/string/discord_roleid

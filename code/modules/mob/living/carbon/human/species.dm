@@ -28,6 +28,8 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 	var/blacklisted = 0 //Flag to exclude from green slime core species.
 	var/dangerous_existence //A flag for transformation spells that tells them "hey if you turn a person into one of these without preperation, they'll probably die!"
 	var/say_mod = "says"	// affects the speech message
+	///What languages this species can understand and say. Use a [language holder datum][/datum/language_holder] in this var.
+	var/species_language_holder = /datum/language_holder
 	var/list/default_features = list() // Default mutant bodyparts for this species. Don't forget to set one for every mutant bodypart you allow this species to have.
 	var/list/mutant_bodyparts = list() 	// Visible CURRENT bodyparts that are unique to a species. DO NOT USE THIS AS A LIST OF ALL POSSIBLE BODYPARTS AS IT WILL FUCK SHIT UP! Changes to this list for non-species specific bodyparts (ie cat ears and tails) should be assigned at organ level if possible. Layer hiding is handled by handle_mutant_bodyparts() below.
 	var/list/mutant_organs = list()		//Internal organs that are unique to this race.
@@ -44,6 +46,15 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 	var/siemens_coeff = 1 //base electrocution coefficient
 	var/damage_overlay_type = "human" //what kind of damage overlays (if any) appear on our species when wounded?
 	var/fixed_mut_color = "" //to use MUTCOLOR with a fixed color that's independent of dna.feature["mcolor"]
+	
+	///Is this species a flying species? Used as an easy check for some things
+	var/flying_species = FALSE
+	///The actual flying ability given to flying species
+	var/datum/action/innate/flight/fly
+	///The icon used for the wings
+	var/wings_icon = "Angel"
+	///Used to determine what description to give when using a potion of flight, if false it will describe them as growing new wings
+	var/has_innate_wings = FALSE
 
 	// species-only traits. Can be found in DNA.dm
 	var/list/species_traits = list()
@@ -71,6 +82,9 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 	var/obj/item/organ/liver/mutantliver
 	var/obj/item/organ/stomach/mutantstomach
 	var/override_float = FALSE
+	
+	///Bitflag that controls what in game ways something can select this species as a spawnable source, such as magic mirrors. See [mob defines][code/_DEFINES/mobs.dm] for possible sources.
+	var/changesource_flags = NONE
 
 ///////////
 // PROCS //
@@ -94,7 +108,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 		GLOB.roundstart_races += "human"
 
 /datum/species/proc/check_roundstart_eligible()
-	if(id in (CONFIG_GET(keyed_flag_list/roundstart_races)))
+	if(id in (CONFIG_GET(keyed_list/roundstart_races)))
 		return TRUE
 	return FALSE
 
@@ -1679,3 +1693,116 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 
 /datum/species/proc/negates_gravity(mob/living/carbon/human/H)
 	return 0
+	
+////////////////
+//Tail Wagging//
+////////////////
+
+/datum/species/proc/can_wag_tail(mob/living/carbon/human/H)
+	return FALSE
+
+/datum/species/proc/is_wagging_tail(mob/living/carbon/human/H)
+	return FALSE
+
+/datum/species/proc/start_wagging_tail(mob/living/carbon/human/H)
+
+/datum/species/proc/stop_wagging_tail(mob/living/carbon/human/H)
+
+///////////////
+//FLIGHT SHIT//
+///////////////
+
+/datum/species/proc/GiveSpeciesFlight(mob/living/carbon/human/H)
+	if(flying_species) //species that already have flying traits should not work with this proc
+		return
+	flying_species = TRUE
+	if(isnull(fly))
+		fly = new
+		fly.Grant(H)
+	if(H.dna.features["wings"] != wings_icon)
+		mutant_bodyparts |= "wings"
+		H.dna.features["wings"] = wings_icon
+		H.update_body()
+
+/datum/species/proc/HandleFlight(mob/living/carbon/human/H)
+	if(H.movement_type & FLYING)
+		if(!CanFly(H))
+			ToggleFlight(H)
+			return FALSE
+		return TRUE
+	else
+		return FALSE
+
+/datum/species/proc/CanFly(mob/living/carbon/human/H)
+	if(H.stat || !(H.mobility_flags & MOBILITY_STAND))
+		return FALSE
+	if(H.wear_suit && ((H.wear_suit.flags_inv & HIDEJUMPSUIT) && (!H.wear_suit.species_exception || !is_type_in_list(src, H.wear_suit.species_exception))))	//Jumpsuits have tail holes, so it makes sense they have wing holes too
+		to_chat(H, "<span class='warning'>Your suit blocks your wings from extending!</span>")
+		return FALSE
+	var/turf/T = get_turf(H)
+	if(!T)
+		return FALSE
+
+	var/datum/gas_mixture/environment = T.return_air()
+	if(environment && !(environment.return_pressure() > 30))
+		to_chat(H, "<span class='warning'>The atmosphere is too thin for you to fly!</span>")
+		return FALSE
+	else
+		return TRUE
+
+/datum/species/proc/flyslip(mob/living/carbon/human/H)
+	var/obj/buckled_obj
+	if(H.buckled)
+		buckled_obj = H.buckled
+
+	to_chat(H, "<span class='notice'>Your wings spazz out and launch you!</span>")
+
+	playsound(H.loc, 'sound/misc/slip.ogg', 50, TRUE, -3)
+
+	for(var/obj/item/I in H.held_items)
+		H.accident(I)
+
+	var/olddir = H.dir
+
+	H.stop_pulling()
+	if(buckled_obj)
+		buckled_obj.unbuckle_mob(H)
+		step(buckled_obj, olddir)
+	else
+		new /datum/forced_movement(H, get_ranged_target_turf(H, olddir, 4), 1, FALSE, CALLBACK(H, /mob/living/carbon/.proc/spin, 1, 1))
+	return TRUE
+
+//UNSAFE PROC, should only be called through the Activate or other sources that check for CanFly
+/datum/species/proc/ToggleFlight(mob/living/carbon/human/H)
+	if(!(H.movement_type & FLYING))
+		stunmod *= 2
+		speedmod -= 0.35
+		H.setMovetype(H.movement_type | FLYING)
+		override_float = TRUE
+		passtable_on(H, SPECIES_TRAIT)
+		H.OpenWings()
+		H.update_mobility()
+	else
+		stunmod *= 0.5
+		speedmod += 0.35
+		H.setMovetype(H.movement_type & ~FLYING)
+		override_float = FALSE
+		passtable_off(H, SPECIES_TRAIT)
+		H.CloseWings()
+
+/datum/action/innate/flight
+	name = "Toggle Flight"
+	check_flags = AB_CHECK_CONSCIOUS|AB_CHECK_STUN
+	icon_icon = 'icons/mob/actions/actions_items.dmi'
+	button_icon_state = "flight"
+
+/datum/action/innate/flight/Activate()
+	var/mob/living/carbon/human/H = owner
+	var/datum/species/S = H.dna.species
+	if(S.CanFly(H))
+		S.ToggleFlight(H)
+		if(!(H.movement_type & FLYING))
+			to_chat(H, "<span class='notice'>You settle gently back onto the ground...</span>")
+		else
+			to_chat(H, "<span class='notice'>You beat your wings and begin to hover gently above the ground...</span>")
+			H.set_resting(FALSE, TRUE)

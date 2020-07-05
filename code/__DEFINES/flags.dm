@@ -24,6 +24,8 @@ GLOBAL_LIST_INIT(bitflags, list(1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 204
 #define TESLA_IGNORE_1				(1<<13)     // TESLA_IGNORE grants immunity from being targeted by tesla-style electricity
 #define INITIALIZED_1				(1<<14)     //Whether /atom/Initialize() has already run for the object
 #define ADMIN_SPAWNED_1			    (1<<15) 	//was this spawned by an admin? used for stat tracking stuff.
+/// should not get harmed if this gets caught by an explosion?
+#define PREVENT_CONTENTS_EXPLOSION_1 (1<<16)
 
 //turf-only flags
 #define NOJAUNT_1					(1<<0)
@@ -58,6 +60,26 @@ GLOBAL_LIST_INIT(bitflags, list(1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 204
 //Movement Types
 #define GROUND (1<<0)
 #define FLYING (1<<1)
+#define VENTCRAWLING	(1<<2)
+#define FLOATING		(1<<3)
+/// When moving, will Bump()/Cross()/Uncross() everything, but won't be stopped.
+#define UNSTOPPABLE		(1<<4)
+
+//Mob mobility var flags
+/// can move
+#define MOBILITY_MOVE			(1<<0)
+/// can, and is, standing up
+#define MOBILITY_STAND			(1<<1)
+/// can pickup items
+#define MOBILITY_PICKUP			(1<<2)
+/// can hold and use items
+#define MOBILITY_USE			(1<<3)
+/// can use interfaces like machinery
+#define MOBILITY_UI				(1<<4)
+/// can use storage item
+#define MOBILITY_STORAGE		(1<<5)
+/// can pull things
+#define MOBILITY_PULL			(1<<6)
 
 // Flags for reagents
 #define REAGENT_NOREACT (1<<0)
@@ -85,3 +107,8 @@ GLOBAL_LIST_INIT(bitflags, list(1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 204
 #define EMP_PROTECT_SELF (1<<0)
 #define EMP_PROTECT_CONTENTS (1<<1)
 #define EMP_PROTECT_WIRES (1<<2)
+
+/// If the thing can reflect light (lasers/energy)
+#define RICOCHET_SHINY			(1<<0)
+/// If the thing can reflect matter (bullets/bomb shrapnel)
+#define RICOCHET_HARD			(1<<1)

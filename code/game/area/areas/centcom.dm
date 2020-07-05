@@ -2,7 +2,7 @@
 // CENTCOM
 
 /area/centcom
-	name = "CASP Printer Area"
+	name = "CentCom"
 	icon_state = "centcom"
 	dynamic_lighting = DYNAMIC_LIGHTING_FORCED
 	requires_power = FALSE
@@ -12,16 +12,16 @@
 	flags_1 = NONE
 
 /area/centcom/control
-	name = "CASP Printer Docks"
+	name = "CentCom Docks"
 
 /area/centcom/evac
-	name = "CASP Printer Recovery Ship"
+	name = "CentCom Recovery Ship"
 
 /area/centcom/supply
-	name = "CASP Printer Supply Dock"
+	name = "CentCom Supply Shuttle Dock"
 
 /area/centcom/ferry
-	name = "CASP Printer Transport Dock"
+	name = "CentCom Transport Shuttle Dock"
 
 /area/centcom/prison
 	name = "Admin Prison"
@@ -29,6 +29,37 @@
 /area/centcom/holding
 	name = "Holding Facility"
 
+/area/centcom/supplypod/fly_me_to_the_moon
+	name = "Supplypod Shipping lane"
+	icon_state = "supplypod_flight"
+
+/area/centcom/supplypod
+	name = "Supplypod Facility"
+	icon_state = "supplypod"
+	dynamic_lighting = DYNAMIC_LIGHTING_DISABLED
+
+/area/centcom/supplypod/pod_storage
+	name = "Supplypod Storage"
+	icon_state = "supplypod_holding"
+
+/area/centcom/supplypod/loading
+	name = "Supplypod Loading Facility"
+	icon_state = "supplypod_loading"
+
+/area/centcom/supplypod/loading/one
+	name = "Bay #1"
+
+/area/centcom/supplypod/loading/two
+	name = "Bay #2"
+
+/area/centcom/supplypod/loading/three
+	name = "Bay #3"
+
+/area/centcom/supplypod/loading/four
+	name = "Bay #4"
+
+/area/centcom/supplypod/loading/ert
+	name = "ERT Bay"
 //THUNDERDOME
 
 /area/tdome
@@ -107,13 +138,6 @@
 	name = "Syndicate Elite Squad"
 	icon_state = "syndie-elite"
 
-/area/fabric_of_reality
-	name = "Tear in the Fabric of Reality"
-	requires_power = FALSE
-	has_gravity = TRUE
-	noteleport = TRUE
-	blob_allowed = FALSE
-
 //CAPTURE THE FLAG
 
 /area/ctf
@@ -121,6 +145,7 @@
 	icon_state = "yellow"
 	requires_power = FALSE
 	has_gravity = STANDARD_GRAVITY
+	flags_1 = NONE
 
 /area/ctf/control_room
 	name = "Control Room A"
@@ -148,19 +173,3 @@
 
 /area/ctf/flag_room2
 	name = "Flag Room B"
-
-// REEBE
-
-/area/reebe
-	name = "Reebe"
-	icon_state = "yellow"
-	requires_power = FALSE
-	has_gravity = STANDARD_GRAVITY
-	noteleport = TRUE
-	hidden = TRUE
-	ambientsounds = REEBE
-
-/area/reebe/city_of_cogs
-	name = "City of Cogs"
-	icon_state = "purple"
-	hidden = FALSE

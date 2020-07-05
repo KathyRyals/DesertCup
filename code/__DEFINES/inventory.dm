@@ -28,6 +28,10 @@
 #define ITEM_SLOT_POCKET		(1<<11) // this is to allow items with a w_class of WEIGHT_CLASS_NORMAL or WEIGHT_CLASS_BULKY to fit in pockets.
 #define ITEM_SLOT_DENYPOCKET	(1<<12) // this is to deny items with a w_class of WEIGHT_CLASS_SMALL or WEIGHT_CLASS_TINY to fit in pockets.
 #define ITEM_SLOT_NECK			(1<<13)
+#define ITEM_SLOT_BACKPACK		(1<<14)
+#define ITEM_SLOT_SUITSTORE		(1<<15)
+#define ITEM_SLOT_LPOCKET		(1<<16)
+#define ITEM_SLOT_RPOCKET		(1<<17)
 
 //SLOTS
 #define SLOT_BACK			1

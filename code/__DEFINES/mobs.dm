@@ -7,11 +7,19 @@
 #define PLAYER_READY_TO_PLAY 1
 #define PLAYER_READY_TO_OBSERVE 2
 
+//Game mode list indexes
+#define CURRENT_LIVING_PLAYERS	"living_players_list"
+#define CURRENT_LIVING_ANTAGS	"living_antags_list"
+#define CURRENT_DEAD_PLAYERS	"dead_players_list"
+#define CURRENT_OBSERVERS		"current_observers_list"
+
 //movement intent defines for the m_intent var
 #define MOVE_INTENT_WALK "walk"
 #define MOVE_INTENT_RUN  "run"
 
 //Blood levels
+#define BLOOD_VOLUME_MAX_LETHAL		2150
+#define BLOOD_VOLUME_EXCESS			2100
 #define BLOOD_VOLUME_MAXIMUM		2000
 #define BLOOD_VOLUME_SLIME_SPLIT	1120
 #define BLOOD_VOLUME_NORMAL			560
@@ -25,6 +33,7 @@
 #define MOB_SIZE_SMALL 1
 #define MOB_SIZE_HUMAN 2
 #define MOB_SIZE_LARGE 3
+#define MOB_SIZE_HUGE 4 // Use this for things you don't want bluespace body-bagged
 
 //Ventcrawling defines
 #define VENTCRAWLER_NONE   0
@@ -32,8 +41,8 @@
 #define VENTCRAWLER_ALWAYS 2
 
 //Bloodcrawling defines
-#define BLOODCRAWL 1
-#define BLOODCRAWL_EAT 2
+#define BLOODCRAWL 1 /// bloodcrawling, see: [/mob/living/var/bloodcrawl]
+#define BLOODCRAWL_EAT 2 /// crawling+mob devour
 
 //Mob bio-types
 #define MOB_ORGANIC 	"organic"
@@ -256,5 +265,62 @@
 #define AI_CAMERA_LUMINOSITY	5
 #define AI_VOX // Comment out if you don't want VOX to be enabled and have players download the voice sounds.
 
+// /obj/item/bodypart on_mob_life() retval flag
+#define BODYPART_LIFE_UPDATE_HEALTH (1<<0)
+
+#define MAX_REVIVE_FIRE_DAMAGE 180
+#define MAX_REVIVE_BRUTE_DAMAGE 180
+
+#define HUMAN_FIRE_STACK_ICON_NUM	3
+
+#define GRAB_PIXEL_SHIFT_PASSIVE 6
+#define GRAB_PIXEL_SHIFT_AGGRESSIVE 12
+#define GRAB_PIXEL_SHIFT_NECK 16
+
+#define PULL_PRONE_SLOWDOWN 1.5
+#define HUMAN_CARRY_SLOWDOWN 0.35
+
+//Flags that control what things can spawn species (whitelist)
+//Badmin magic mirror
+#define MIRROR_BADMIN (1<<0)
+//Standard magic mirror (wizard)
+#define MIRROR_MAGIC  (1<<1)
+//Pride ruin mirror
+#define MIRROR_PRIDE  (1<<2)
+//Race swap wizard event
+#define RACE_SWAP     (1<<3)
+//ERT spawn template (avoid races that don't function without correct gear)
+#define ERT_SPAWN     (1<<4)
+//xenobio black crossbreed
+#define SLIME_EXTRACT (1<<5)
+//Wabbacjack staff projectiles
+#define WABBAJACK     (1<<6)
+
+// Reasons a defibrilation might fail
+#define DEFIB_POSSIBLE (1<<0)
+#define DEFIB_FAIL_SUICIDE (1<<1)
+#define DEFIB_FAIL_HELLBOUND (1<<2)
+#define DEFIB_FAIL_HUSK (1<<3)
+#define DEFIB_FAIL_TISSUE_DAMAGE (1<<4)
+#define DEFIB_FAIL_FAILING_HEART (1<<5)
+#define DEFIB_FAIL_NO_HEART (1<<6)
+#define DEFIB_FAIL_FAILING_BRAIN (1<<7)
+#define DEFIB_FAIL_NO_BRAIN (1<<8)
+#define DEFIB_FAIL_NO_INTELLIGENCE (1<<9)
+
+// Bit mask of possible return values by can_defib that would result in a revivable patient
+#define DEFIB_REVIVABLE_STATES (DEFIB_FAIL_NO_HEART | DEFIB_FAIL_FAILING_HEART | DEFIB_FAIL_HUSK | DEFIB_FAIL_TISSUE_DAMAGE | DEFIB_FAIL_FAILING_BRAIN | DEFIB_POSSIBLE)
+
+#define SLEEP_CHECK_DEATH(X) sleep(X); if(QDELETED(src) || stat == DEAD) return;
+#define INTERACTING_WITH(X, Y) (Y in X.do_afters)
+
+/// If you examine the same atom twice in this timeframe, we call examine_more() instead of examine()
+#define EXAMINE_MORE_TIME	1 SECONDS
+
+#define SILENCE_RANGED_MESSAGE (1<<0)
+
 //Respawn timer
-#define RESPAWN_TIMER 6000 // in deciseconds, the time to wait before allowing respawn. 15 minutes = 15 * 60 (seconds in minute) * 15 (seconds to deciseconds)
+#define RESPAWN_TIMER 3000 // in deciseconds, the time to wait before allowing respawn. 15 minutes = 15 * 60 (seconds in minute) * 15 (seconds to deciseconds)
+
+//ERT spawn template (avoid races that don't function without correct gear)
+#define ERT_SPAWN     (1<<4)

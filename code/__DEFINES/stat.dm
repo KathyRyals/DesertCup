@@ -17,3 +17,6 @@
 //ai power requirement defines
 #define POWER_REQ_ALL 1
 #define POWER_REQ_CLOCKCULT 2
+
+//Maximum healthiness an individual can have
+#define MAX_SATIETY 600

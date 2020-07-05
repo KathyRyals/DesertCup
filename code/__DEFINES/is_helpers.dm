@@ -59,6 +59,8 @@
 #define isluminescent(A) (is_species(A, /datum/species/jelly/luminescent))
 #define iszombie(A) (is_species(A, /datum/species/zombie))
 #define ishumanbasic(A) (is_species(A, /datum/species/human))
+#define isfelinid(A) (is_species(A, /datum/species/human/felinid))
+#define ismoth(A) (is_species(A, /datum/species/moth))
 //f13 edit
 #define isghoul(A) (is_species(A, /datum/species/ghoul))
 
@@ -172,6 +174,8 @@ GLOBAL_LIST_INIT(pointed_types, typecacheof(list(
 #define is_pointed(W) (is_type_in_typecache(W, GLOB.pointed_types))
 
 #define isbodypart(A) (istype(A, /obj/item/bodypart))
+
+#define isprojectile(A) (istype(A, /obj/projectile))
 
 //Assemblies
 #define isassembly(O) (istype(O, /obj/item/assembly))

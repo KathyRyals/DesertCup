@@ -22,10 +22,7 @@
 /obj/machinery/rnd/production/Initialize()
 	. = ..()
 	create_reagents(0)
-	materials = AddComponent(/datum/component/material_container,
-		list(MAT_METAL, MAT_GLASS, MAT_SILVER, MAT_GOLD, MAT_DIAMOND, MAT_PLASMA, MAT_URANIUM, MAT_BANANIUM, MAT_TITANIUM, MAT_BLUESPACE, MAT_PLASTIC), 0,
-		TRUE, list(/obj/item/stack), CALLBACK(src, .proc/is_insertion_ready), CALLBACK(src, .proc/AfterMaterialInsert))
-	materials.precise_insertion = TRUE
+	materials = AddComponent(/datum/component/material_container, materials_list, 100000, allowed_types=/obj/item/stack, _disable_attackby=FALSE)
 	RefreshParts()
 	matching_designs = list()
 	cached_designs = list()

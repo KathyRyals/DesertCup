@@ -18,6 +18,17 @@ GLOBAL_LIST_INIT(command_positions, list(
 	"NCR Administrator"
     ))
 
+GLOBAL_LIST_INIT(engineering_positions, list())
+GLOBAL_LIST_INIT(medical_positions, list())
+GLOBAL_LIST_INIT(science_positions, list())
+GLOBAL_LIST_INIT(supply_positions, list())
+GLOBAL_LIST_INIT(service_positions, list())
+GLOBAL_LIST_INIT(nonhuman_positions, list())
+
+GLOBAL_LIST_INIT(exp_specialmap, list(
+	EXP_TYPE_LIVING = list()
+	)) // all living mobs
+GLOBAL_PROTECT(exp_specialmap)
 
 GLOBAL_LIST_INIT(silicon_whitelist_positions, list(
 "Mr. Handy"))
