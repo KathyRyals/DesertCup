@@ -253,5 +253,13 @@
 	results = list("stimpak" = 2)
 	required_reagents = list("blood" = 2, "spaceacillin" = 3)
 	required_temp = 300
+	
+/datum/chemical_reaction/dilutedstimpak
+	name = "Diluted Stimpak Fluid"
+	id = "stimpakdilution"
+	results = list("diluted_stimpak" = 2)
+	required_reagents = list("stimpak" = 1, "water" = 1)
+	required_temp = 375
+
 
 
