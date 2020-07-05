@@ -1722,3 +1722,38 @@ datum/reagent/medicine/bitter_drink/on_mob_life(mob/living/M)
 		H.vomit(10)
 	..()
 	. = 1
+	
+/datum/reagent/medicine/diluted_stimpak
+	name = "Diluted Stimpak Fluid"
+	id = "diluted_stimpak"
+	description = "Slowly heals damage when injected. Deals minor toxin damage if ingested."
+	reagent_state = LIQUID
+	color = "#C8A5DC"
+	taste_description = "watery metal"
+	metabolization_rate = 0.5 * REAGENTS_METABOLISM
+	overdose_threshold = 30
+
+/datum/reagent/medicine/diluted_stimpak/reaction_mob(mob/living/M, method=TOUCH, reac_volume, show_message = 1)
+	if(iscarbon(M) && M.stat != DEAD)
+		if(method in list(INGEST, VAPOR))
+			M.adjustToxLoss(3.75*reac_volume) //increased from 0.5*reac_volume, which was amusingly low since stimpak heals toxins. now a pill at safe max crits and then heals back up to low health within a few seconds
+			if(show_message)
+				to_chat(M, "<span class='warning'>You don't feel so good...</span>")
+	..()
+
+/datum/reagent/medicine/diluted_stimpak/on_mob_life(mob/living/carbon/M)
+	if(M.getBruteLoss() == 0 && M.getFireLoss() == 0 && M.getToxLoss() == 0)
+		metabolization_rate = 1000 * REAGENTS_METABOLISM //instant metabolise if it won't help you, prevents prehealing before combat
+	M.adjustBruteLoss(-2*REM, 0)
+	M.adjustFireLoss(-2*REM, 0)
+	M.adjustToxLoss(-0.5*REM, 0)
+	M.AdjustStun(-2, 0)
+	M.AdjustKnockdown(-2, 0)
+	M.adjustStaminaLoss(-1*REM, 0)
+	..()
+
+/datum/reagent/medicine/diluted_stimpak/overdose_process(mob/living/M)
+	M.adjustToxLoss(5*REM, 0)
+	M.adjustOxyLoss(8*REM, 0)
+	..()
+	. = 1
