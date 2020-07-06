@@ -2,13 +2,8 @@
 name: Compile changelogs
 
 on:
-  push:
-    branches: 
-      - master
-
-#on:
-#  schedule:
-#    - cron: '0 * * * *'
+  schedule:
+    - cron: '0 0 * * *'
 
 jobs:
   compile:
