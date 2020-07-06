@@ -215,3 +215,10 @@
 	volume = 5
 	amount_per_transfer_from_this = 5
 	list_reagents = list("medx" = 5)
+	
+/obj/item/reagent_containers/hypospray/medipen/stimpak/diluted
+	name = "diluted stimpak"
+	desc = "A rusted delivery system filled with cheap-looking, watery fluid. Heals physical damage half as quickly as a standard stimpak."
+	icon_state = "rustedstimpakpen"
+	amount_per_transfer_from_this = 10
+	list_reagents = list("diluted_stimpak" = 10)
