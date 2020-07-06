@@ -457,7 +457,8 @@
 				/obj/item/reagent_containers/hypospray/medipen/stimpak,
 				/obj/item/reagent_containers/medspray/styptic,
 				/obj/item/reagent_containers/medspray/silver_sulf,
-				/obj/item/reagent_containers/medspray/sterilizine
+				/obj/item/reagent_containers/medspray/sterilizine,
+				/obj/item/reagent_containers/hypospray/medipen/stimpak/diluted
 				)
 
 /obj/effect/spawner/lootdrop/f13/medical/wasteland/meds/drug //remove equipment, has nothing on it
@@ -1108,7 +1109,8 @@
 				/obj/item/reagent_containers/glass/bowl,
 				/obj/item/reagent_containers/spray/cleaner,
 				/obj/item/reagent_containers/glass/bucket,
-				/obj/item/poster/random_contraband
+				/obj/item/poster/random_contraband,
+				/obj/item/reagent_containers/hypospray/medipen/stimpak/diluted
 				)
 
 /obj/effect/spawner/lootdrop/f13/seedspawner
